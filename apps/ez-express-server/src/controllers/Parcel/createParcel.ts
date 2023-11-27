@@ -12,10 +12,7 @@ import User from "../../models/User";
 import Depot from "../../models/Depot";
 import { generateTrackingNumber } from "../../utils/generateTrackingNumber";
 import { optimoRouteClient } from "../../library/OptimoRouteApi";
-import { getStartEndOfDayInUTCWithOffset } from "../../utils/getTime";
-import { formatInTimeZone } from "date-fns-tz";
-import { addDays } from "date-fns";
-import { getCityByPostalCode } from "@repo/utils";
+import { transformParcelToOptimoRouteOrder } from "../../library/OptimoRouteApi/transformParcelToOptimoRouteOrder";
 
 export const createParcel = async (req: Request, res: Response) => {
   const {
@@ -113,45 +110,11 @@ export const createParcel = async (req: Request, res: Response) => {
 
     const shouldTurnOnOptimoroute = process.env.NODE_ENV === "development";
 
+    // Add delivery orders to Optimoroute
     if (shouldTurnOnOptimoroute) {
-      // Add delivery orders to Optimoroute
-      const tz = "America/Toronto";
-      const day = formatInTimeZone(new Date(), tz, "yyyy-MM-dd");
-      const [dayStartFromYesterday6PM, dayEndFromToday6PM] =
-        getStartEndOfDayInUTCWithOffset(day, tz, { hours: 5, minutes: 29 });
-      const isTodayParcel =
-        parcel.get("createdAt") > dayStartFromYesterday6PM &&
-        parcel.get("createdAt") < dayEndFromToday6PM;
-      const deliveryDate = isTodayParcel
-        ? day
-        : formatInTimeZone(addDays(new Date(day), 1), tz, "yyyy-MM-dd");
-      await optimoRouteClient.syncOrder({
-        orderNo: parcel.trackingNumber,
-        date: deliveryDate,
-        duration: 15,
-        priority: "M",
-        type: "D",
-        assignedTo: {
-          serial: "001",
-        },
-        location: {
-          address: parcel.get("formattedAddress"),
-          locationName: depot?.get("name"),
-          acceptPartialMatch: true,
-        },
-        timeWindows: [
-          {
-            twFrom: "18:30",
-            twTo: "23:59",
-          },
-        ],
-        notes: parcel.notes,
-        email: "ezexpress.canada@gmail.com",
-        phone: parcel.phone,
-        customField1: `${parcel.get("parcelsCount")}`, // parcels count
-        customField2: `${getCityByPostalCode(parcel.postalCode)}`, // area name
-        notificationPreference: "both",
-      });
+      await optimoRouteClient.syncOrder(
+        transformParcelToOptimoRouteOrder(parcel, depot)
+      );
     }
 
     return res.status(200).send(doc);

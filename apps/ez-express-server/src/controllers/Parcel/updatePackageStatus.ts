@@ -1,15 +1,12 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 
 import Parcel from "../../models/Parcel";
 import { PackageStatus } from "../../types/Parcel";
 import Logging from "../../library/Logging";
+import { optimoRouteClient } from "../../library/OptimoRouteApi";
 
 //** Role: Admin, Driver */
-export const updatePackageStatus = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const updatePackageStatus = async (req: Request, res: Response) => {
   const parcelId = req.params.parcelId;
   const { status } = req.body;
 
@@ -25,6 +22,13 @@ export const updatePackageStatus = async (
           status === PackageStatus.Rejected
         ) {
           parcel.set({ ...parcel, status, price: 0 });
+          const shouldTurnOnOptimoroute =
+            process.env.NODE_ENV === "development";
+
+          if (shouldTurnOnOptimoroute) {
+          // delete order on Optimoroute
+            await optimoRouteClient.deleteOrder(parcel.trackingNumber);
+          }
         } else {
           parcel.set({ ...parcel, status });
         }
