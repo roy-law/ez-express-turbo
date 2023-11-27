@@ -1,0 +1,9 @@
+{
+  "name": "@repo/utils",
+  "version": "0.0.0",
+  "license": "MIT",
+  "exports": "./index.ts",
+  "dependencies": {
+    "typescript": "^5.3.2"
+  }
+}

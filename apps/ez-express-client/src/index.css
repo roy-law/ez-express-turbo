@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#root {
+  height: 100vh;
+  width: 100vw;
+}
+
+main {
+  min-height: 94vh;
+  min-width: 100vw;
+}
+
+@layer components {
+  .a4 {
+    height: 81.6vh;
+    width: 57.8vh;
+  }
+}
