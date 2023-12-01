@@ -2,10 +2,13 @@ import { ArrowRightIcon } from "@heroicons/react/20/solid";
 
 import { useAdminDashboard } from "../hooks/useAdminDashboard";
 import { useNavigate } from "react-router-dom";
+import { CSVLink } from "react-csv";
+import { useOptimoCsv } from "../hooks/useOptimoCsv";
 
 export const Dashboard = () => {
   const navigate = useNavigate();
   const locations = useAdminDashboard();
+  const { data, headers } = useOptimoCsv();
 
   return (
     <>
@@ -45,6 +48,16 @@ export const Dashboard = () => {
         >
           Customer Invoices
         </button>
+        <button
+          onClick={() => navigate(`/dashboard/parcel-management`)}
+          type="button"
+          className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+        >
+          Parcel Management
+        </button>
+        <CSVLink data={data} headers={headers}>
+          Download OptimoRoute
+        </CSVLink>
       </div>
 
       <div className="flex flex-col">

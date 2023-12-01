@@ -1,7 +1,6 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { NavLogo } from "./NavLogo";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useUserContext } from "../providers/UserContextProvider";
+import { useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthedRoutes, AuthedOnboardRoutes } from "../types/routes";
 import { ClipLoader } from "react-spinners";
@@ -15,15 +14,13 @@ import jwtDecode from "jwt-decode";
 export function PublicNavBarTabs() {
   const navigate = useNavigate();
   const { loginWithPopup } = useAuth0();
-  // const { user, token, isUserLoading, refetchUser } = useUserContext();
-  const [isClickedLogin, setIsClickedLogin] = useState(false);
 
   useAuth0AccessToken();
   useUserApi();
   useEmailExistApi();
   useDepotApi();
 
-  const { userData, isAuthenticated, isTermsChecked, token } = useUserStore();
+  const { userData, isAuthenticated, token } = useUserStore();
 
   const permissions = useMemo(() => {
     return token ? (jwtDecode(token) as AccessToken).permissions : [];
@@ -31,12 +28,11 @@ export function PublicNavBarTabs() {
 
   const isValidCustomer =
     isAuthenticated &&
-    isTermsChecked &&
+    userData.isTermsChecked &&
     userData.status === 3 &&
     permissions?.includes("customer");
 
   const determineNavigation = useCallback(() => {
-    // if (user?.status !== 3) return
     if (isAuthenticated) {
       // If user on 0 or 1 status and clicked login and user created successfully, navigate user to company form
       if (userData.status === 0 || userData.status === 1) {
@@ -50,14 +46,20 @@ export function PublicNavBarTabs() {
 
       if (userData.status === 3) {
         // If user on 3 status and clicked login and user created successfully, navigate user to dashboard
-        if (permissions?.includes("customer") && isTermsChecked) {
+        if (permissions?.includes("customer") && userData.isTermsChecked) {
           return navigate(AuthedRoutes.DASHBOARD);
         } else {
           return navigate(AuthedOnboardRoutes.ONBOARD_SUCCESSFUL);
         }
       }
     }
-  }, [isAuthenticated, userData.status, isTermsChecked, navigate, permissions]);
+  }, [
+    isAuthenticated,
+    userData.status,
+    userData.isTermsChecked,
+    navigate,
+    permissions,
+  ]);
 
   const login = () => {
     loginWithPopup();
@@ -65,8 +67,6 @@ export function PublicNavBarTabs() {
   };
 
   const continueSignup = () => {
-    // refetchUser();
-    // setIsClickedLogin(true);
     determineNavigation();
   };
 

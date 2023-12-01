@@ -9,6 +9,7 @@ export const userSchema = object({
   email: string().email().required("Email is a required field"),
   picture: string().url().notRequired(),
   isEmailVerified: boolean().notRequired(),
+  isTermsChecked: boolean().notRequired(),
   locale: string().required(),
 });
 

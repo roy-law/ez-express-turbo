@@ -1,8 +1,7 @@
 import { useQuery } from "react-query";
-import { useUserContext } from "../../providers/UserContextProvider";
-import { fetchCustomerDayParcels } from "../../services/api/fetchCustomerDayParcels";
-import { QUERY_KEYS } from "../useQueryKeys";
-import { useUserStore } from "../../store/user/useUserStore";
+import { fetchCustomerDayParcels } from "../services/api/fetchCustomerDayParcels";
+import { QUERY_KEYS } from "./useQueryKeys";
+import { useUserStore } from "../store/user/useUserStore";
 
 export const useParcelsDayApiV2 = (day: string) => {
   const { depotData: depot, token } = useUserStore();

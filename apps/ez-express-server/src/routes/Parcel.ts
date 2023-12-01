@@ -11,7 +11,7 @@ import {
 const router = express.Router();
 
 router.post("/", checkJwt, checkCustomerScope, controller.createParcel);
-router.put("/", checkJwt, checkCustomerScope, controller.updateParcel);
+router.put("/", checkJwt, checkAdminOrCustomer, controller.updateParcel);
 router.get(
   "/cday",
   checkJwt,
@@ -40,6 +40,7 @@ router.get(
   checkAdminScope,
   controller.readAdminTodayParcels
 );
+router.get("/a/:trackingNumber", checkJwt, checkAdminScope, controller.readAdminParcel);
 router.get("/tracking/:trackingNumber", controller.readByTrackingNumber);
 router.patch(
   "/status/:parcelId",

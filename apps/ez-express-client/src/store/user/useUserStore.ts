@@ -1,5 +1,5 @@
 import { GetState, SetState, StoreApi, create } from "zustand";
-import { ComputedUserState, UserAction, UserState } from "./types";
+import { UserAction, UserState } from "./types";
 
 // Define a type for the log function's configuration
 type ConfigFn<T extends object> = (set: SetState<T>, get: GetState<T>, api: StoreApi<T>) => T;
@@ -28,6 +28,7 @@ export const useUserStore = create<UserState & UserAction>(log((set) => ({
     name: "",
     email: "",
     isEmailVerified: false,
+    isTermsChecked: false,
     locale: "en",
     status: 0,
   },
@@ -47,9 +48,6 @@ export const useUserStore = create<UserState & UserAction>(log((set) => ({
     _id: "",
   },
   setDepotData: (depotData) => set(() => ({ depotData })),
-
-  isTermsChecked: false,
-  setIsTermsChecked: (status) => set(() => ({ isTermsChecked: status })),
 
   isAuthenticated: false,
   setIsAuthenticated: (status) => set(() => ({ isAuthenticated: status })),

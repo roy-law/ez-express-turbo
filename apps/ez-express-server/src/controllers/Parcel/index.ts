@@ -5,6 +5,7 @@ export { readByTrackingNumber } from "./readByTrackingNumber";
 export { readCustomerDayParcels } from "./readCustomerDayParcels";
 export { readDayRangeParcels } from "./readDayRangeParcels";
 export { readParcel } from "./readParcel";
+export { readAdminParcel } from "./readAdminParcel";
 export { readExceptionParcels } from "./readExceptionParcels";
 export { updatePackageStatus } from "./updatePackageStatus";
 export { updateParcel } from "./updateParcel";

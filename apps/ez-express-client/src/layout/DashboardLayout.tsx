@@ -8,11 +8,20 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { NavLogo } from "../components/NavLogo";
 import { AuthedRoutes, UnAuthedRoutes } from "../types/routes";
+import { useAuth0AccessToken } from "../hooks/useAuth0AccessToken";
+import { useUserApi } from "../hooks/useUserApi";
+import { useEmailExistApi } from "../hooks/useEmailExistApi";
+import { useDepotApi } from "../hooks/useDepotApi";
 
 export function DashboardLayout() {
   const navigate = useNavigate();
   const location = useLocation();
   const { logout } = useAuth0();
+
+  useAuth0AccessToken();
+  useUserApi();
+  useEmailExistApi();
+  useDepotApi();
 
   // Use name for the map key to prevent errors
   const navigation = useMemo(

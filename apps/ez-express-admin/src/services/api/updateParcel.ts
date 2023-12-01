@@ -2,7 +2,7 @@ import axios from "axios";
 import { ParcelRequest as ParcelRequestTemp } from "../../types";
 import { headersFactory } from "../../utils/api/headersFactory";
 
-interface ParcelRequest extends ParcelRequestTemp {
+interface ParcelRequest extends Partial<ParcelRequestTemp> {
   _id: string;
 }
 

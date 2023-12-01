@@ -15,6 +15,7 @@ import { FormNewDriver } from "./pages/FormNewDriver";
 import { ExceptionParcels } from "./pages/ExceptionParcels";
 import { CustomerInvoice } from "./pages/CustomerInvoice";
 import { MonthlyInvoicePdf } from "./pages/MonthlyInvoicePdf";
+import { ParcelManagement } from "./pages/ParcelManagement";
 
 export const router = createBrowserRouter([
   {
@@ -51,6 +52,10 @@ export const router = createBrowserRouter([
           {
             path: AuthedRoutes.FORM_NEW_DRIVER,
             element: <FormNewDriver />,
+          },
+          {
+            path: AuthedRoutes.PARCEL_MANAGEMENT,
+            element: <ParcelManagement />,
           },
           {
             path: AuthedRoutes.EXCEPTION_PARCELS,

@@ -1,6 +1,5 @@
 import React from "react";
 import { PacmanLoader } from "react-spinners";
-import { DashboardStats } from "../components/dashboard/DashboardStats";
 import { DeliveriesTable } from "../components/dashboard/DeliveriesTable";
 import { EmptyDeliveriesTableState } from "../components/dashboard/EmptyDeliveriesTableState";
 import { format, add } from "date-fns";
