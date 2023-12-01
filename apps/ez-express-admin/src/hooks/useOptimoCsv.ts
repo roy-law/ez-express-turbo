@@ -83,6 +83,5 @@ export const useOptimoCsv = () => {
 
   const filteredData = data.filter((d: any) => ![PackageStatus.Cancelled, PackageStatus.Rejected].includes(d.status))
 
-console.log("roy", filteredData)
   return { headers, data: filteredData };
 };
