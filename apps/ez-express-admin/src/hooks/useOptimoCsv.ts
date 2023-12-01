@@ -37,7 +37,7 @@ export const useOptimoCsv = () => {
           packages: data.map((i: any) => ({
             orderId: i.trackingNumber,
             date: format(new Date(), "yyyy-MM-dd"),
-            locationName: i.companyName,
+            shopName: i.companyId.companyName,
             address: i.formattedAddress,
             duration: "15",
             twFrom: "18:30",
@@ -59,7 +59,7 @@ export const useOptimoCsv = () => {
   const headers = [
     { label: "Order ID", key: "orderId" },
     { label: "Date", key: "date" },
-    { label: "Location Name", key: "locationName" },
+    { label: "Shop Name", key: "shopName" },
     { label: "Address", key: "address" },
     { label: "Duration", key: "duration" },
     { label: "TW from", key: "twFrom" },
