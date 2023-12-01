@@ -2,7 +2,7 @@ import { format } from "date-fns";
 import { useQueries } from "react-query";
 import { useUserContext } from "../providers/UserContextProvider";
 import { fetchAdminDayParcels } from "../services/api/fetchAdminDayParcels";
-import { AreaConfigMap } from "../types";
+import { AreaConfigMap, PackageStatus } from "../types";
 
 export const useOptimoCsv = () => {
   const { token: accessToken } = useUserContext();
@@ -48,6 +48,7 @@ export const useOptimoCsv = () => {
             notification: "text",
             parcelsCount: i.parcelsCount,
             area: i.city,
+            status: i.status,
           })),
           ...config,
         };
@@ -72,12 +73,15 @@ export const useOptimoCsv = () => {
     { label: "Area", key: "area" },
   ];
 
-  const data = queriesData.reduce((prev: any, curr: any) => {
-    if (curr.isSuccess && curr.data) {
-      return [...prev, ...curr.data.packages];
-    }
-    return prev;
-  }, []);
+  const data = queriesData
+    .reduce((prev: any, curr: any) => {
+      if (curr.isSuccess && curr.data) {
+        return [...prev, ...curr.data.packages];
+      }
+      return prev;
+    }, [])
 
-  return { headers, data };
+  const filteredData = data.filter((d: any) => d === PackageStatus.Cancelled || d === PackageStatus.Rejected)
+
+  return { headers, data: filteredData };
 };
