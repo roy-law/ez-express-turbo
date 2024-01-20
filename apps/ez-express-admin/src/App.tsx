@@ -17,6 +17,7 @@ import { CustomerInvoice } from "./pages/CustomerInvoice";
 import { MonthlyInvoicePdf } from "./pages/MonthlyInvoicePdf";
 import { ParcelManagement } from "./pages/ParcelManagement";
 import { NewOrders } from "./pages/NewOrders";
+import { AreaManagement } from "./pages/AreaManagement";
 
 export const router = createBrowserRouter([
   {
@@ -65,6 +66,10 @@ export const router = createBrowserRouter([
           {
             path: AuthedRoutes.NEW_ORDERS,
             element: <NewOrders />,
+          },
+          {
+            path: AuthedRoutes.AREA_MANAGEMENT,
+            element: <AreaManagement />,
           },
           {
             path: AuthedRoutes.CUSTOMER_INVOICE,

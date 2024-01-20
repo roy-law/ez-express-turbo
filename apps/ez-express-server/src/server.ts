@@ -12,6 +12,7 @@ import authHealthCheckRoutes from "./routes/AuthHealthCheck";
 import userRoutes from "./routes/User";
 import scheduleRoutes from "./routes/Schedule";
 import exceptionScheduleRoutes from "./routes/ExceptionSchedule";
+import areaPostalCodeRoutes from "./routes/AreaPostalCode";
 import driverRoutes from "./routes/Driver";
 
 const router = express();
@@ -80,6 +81,7 @@ const StartServer = () => {
   router.use("/api/schedule", scheduleRoutes);
   router.use("/api/driver", driverRoutes);
   router.use("/api/exceptionSchedule", exceptionScheduleRoutes);
+  router.use("/api/areaPostalCode", areaPostalCodeRoutes);
 
   /** Error handling */
   router.use((req, res, next) => {

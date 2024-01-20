@@ -14,5 +14,6 @@ export const AuthedRoutes = {
   NEW_ORDERS: "/dashboard/new-orders",
   PARCEL_MANAGEMENT: "/dashboard/parcel-management",
   CUSTOMER_INVOICE: "/dashboard/customer-invoice",
+  AREA_MANAGEMENT: "/dashboard/area-management",
   MONTHLY_INVOICE: "/monthly-invoice/:depotId/:month",
 };

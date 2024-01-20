@@ -4,6 +4,7 @@ import { useAdminDashboard } from "../hooks/useAdminDashboard";
 import { useNavigate } from "react-router-dom";
 import { CSVLink } from "react-csv";
 import { useOptimoCsv } from "../hooks/useOptimoCsv";
+import { DashboardPageButton } from "../components/dashboard";
 
 export const Dashboard = () => {
   const navigate = useNavigate();
@@ -65,6 +66,10 @@ export const Dashboard = () => {
         <CSVLink data={data} headers={headers}>
           Download OptimoRoute
         </CSVLink>
+        <DashboardPageButton
+          text="Area Management"
+          to={"/dashboard/area-management"}
+        />
       </div>
 
       <div className="flex flex-col">
