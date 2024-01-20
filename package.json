@@ -4,16 +4,17 @@
     "build": "turbo build",
     "dev": "turbo dev",
     "lint": "turbo lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "dev:doc": "npm run dev -w apps/docs",
+    "build:client": "npm run build -w apps/ez-express-client",
+    "build:admin": "npm run build -w apps/ez-express-admin",
+    "build:server": "npm run build -w apps/ez-express-server"
   },
   "devDependencies": {
     "eslint": "^8.54.0",
     "@repo/eslint-config": "*",
     "prettier": "^3.1.0",
-    "turbo": "latest",
-    "start:client": "npm run start -w apps/ez-express-client",
-    "start:admin": "npm run start -w apps/ez-express-admin",
-    "start:server": "npm run start -w apps/ez-express-server"
+    "turbo": "latest"
   },
   "packageManager": "npm@8.19.2",
   "workspaces": [

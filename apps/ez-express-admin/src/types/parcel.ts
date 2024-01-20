@@ -47,6 +47,8 @@ export const packageSizeOptionSchema = object({
 export const parcelRequestSchema = object({
   notes: string().notRequired(),
   email: string().email().notRequired(),
+  customerRef: string().notRequired(),
+  parcelsCount: number().notRequired(),
   phone: string()
     .required("Phone number is a required field.")
     .length(10, "Phone number is 10 digits.")
@@ -70,7 +72,16 @@ export const parcelRequestSchema = object({
     "Choose a package size",
   ),
   price: number().required(),
-  depotId: string().required(),
+  depotEmail: string().test(function (value) {
+    const { depotId } = this.parent;
+    if (!depotId) return value != null;
+    return true;
+  }),
+  depotId: string().test(function (value) {
+    const { depotEmail } = this.parent;
+    if (!depotEmail) return value != null;
+    return true;
+  }),
 });
 
 export const parcelFormScehema = object({
@@ -110,7 +121,8 @@ export type ParcelSizeOption = yup.InferType<typeof packageSizeOptionSchema>;
 
 export interface ParcelResponse extends Address, Timestamps, Contact {
   _id: string;
-  depotId: string;
+  depotId?: string;
+  depotEmail?: string;
   packageSize: PackageSize;
   price: number;
   trackingNumber: string;

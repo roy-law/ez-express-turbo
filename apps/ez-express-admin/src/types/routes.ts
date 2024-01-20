@@ -11,6 +11,7 @@ export const AuthedRoutes = {
   DRIVER_MANAGEMENT: "/dashboard/driver-management",
   FORM_NEW_DRIVER: "/dashboard/form-new-driver",
   EXCEPTION_PARCELS: "/dashboard/exception-parcels",
+  NEW_ORDERS: "/dashboard/new-orders",
   PARCEL_MANAGEMENT: "/dashboard/parcel-management",
   CUSTOMER_INVOICE: "/dashboard/customer-invoice",
   MONTHLY_INVOICE: "/monthly-invoice/:depotId/:month",

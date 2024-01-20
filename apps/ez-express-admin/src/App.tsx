@@ -16,6 +16,7 @@ import { ExceptionParcels } from "./pages/ExceptionParcels";
 import { CustomerInvoice } from "./pages/CustomerInvoice";
 import { MonthlyInvoicePdf } from "./pages/MonthlyInvoicePdf";
 import { ParcelManagement } from "./pages/ParcelManagement";
+import { NewOrders } from "./pages/NewOrders";
 
 export const router = createBrowserRouter([
   {
@@ -60,6 +61,10 @@ export const router = createBrowserRouter([
           {
             path: AuthedRoutes.EXCEPTION_PARCELS,
             element: <ExceptionParcels />,
+          },
+          {
+            path: AuthedRoutes.NEW_ORDERS,
+            element: <NewOrders />,
           },
           {
             path: AuthedRoutes.CUSTOMER_INVOICE,

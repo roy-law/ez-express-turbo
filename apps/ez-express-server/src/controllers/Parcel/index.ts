@@ -1,4 +1,6 @@
 export { createParcel } from "./createParcel";
+export { createParcelV2 } from "./createParcelV2";
+export { createParcels } from "./createParcels";
 export { readAdminDayParcels } from "./readAdminDayParcels";
 export { readAdminTodayParcels } from "./readAdminTodayParcels";
 export { readByTrackingNumber } from "./readByTrackingNumber";

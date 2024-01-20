@@ -12,6 +12,7 @@ interface ITrackingTimeline {
 export interface IParcel extends IAddress {
   // Info
   depotId: string;
+  depotEmail?: string;
   name: string;
   firstName: string;
   lastName: string;
@@ -19,6 +20,8 @@ export interface IParcel extends IAddress {
   status: PackageStatus;
   notes: string;
   price: number;
+  customerRef: string;
+  parcelsCount?: number;
 
   // Contact
   phone: string;
@@ -46,6 +49,7 @@ const ParcelSchema = new Schema(
   {
     // Info
     depotId: { type: Schema.Types.ObjectId, required: true, ref: "Depot" },
+    depotEmail: { type: String, required: false },
     companyId: { type: Schema.Types.ObjectId, required: true, ref: "User" },
     name: { type: String, required: true },
     firstName: { type: String, required: false },
