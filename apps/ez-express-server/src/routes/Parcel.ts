@@ -13,7 +13,6 @@ const router = express.Router();
 router.post("/", checkJwt, checkCustomerScope, controller.createParcel);
 router.post("/v2", checkJwt, checkAdminScope, controller.createParcelV2);
 router.put("/", checkJwt, checkAdminOrCustomer, controller.updateParcel);
-router.post("/parcels", checkJwt, checkAdminScope, controller.createParcels);
 router.get(
   "/cday",
   checkJwt,
