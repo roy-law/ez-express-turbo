@@ -6,7 +6,7 @@ import {
   parcelFormScehema,
   ParcelSizeOption,
 } from "../types";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { createParcel } from "../services/api/createParcel";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -63,10 +63,15 @@ export function FormParcel() {
     useState<ParcelSizeOption>(packageSizes[0]);
 
   const queryClient = useQueryClient();
-  const { mutate } = useMutation(createParcel, {
+  const { mutate } = useMutation({
+    mutationFn: createParcel,
     onSuccess(data) {
-      queryClient.invalidateQueries(dashboardQueryKeys.DASHBOARD_TMR_PARCELS);
-      queryClient.invalidateQueries(dashboardQueryKeys.DASHBOARD_TODAY_PARCELS);
+      queryClient.invalidateQueries({
+        queryKey: dashboardQueryKeys.DASHBOARD_TMR_PARCELS,
+      });
+      queryClient.invalidateQueries({
+        queryKey: dashboardQueryKeys.DASHBOARD_TODAY_PARCELS,
+      });
 
       navigate(AuthedRoutes.DASHBOARD);
     },

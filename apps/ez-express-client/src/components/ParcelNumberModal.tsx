@@ -4,7 +4,7 @@ import { PrinterIcon } from "@heroicons/react/24/outline";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { shippingLabelSchema } from "../types";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateParcel } from "../services/api";
 import { useUserContext } from "../providers/UserContextProvider";
 import { useQueryKeys } from "../hooks/useQueryKeys";
@@ -39,10 +39,15 @@ export default function ParcelNumberModal({
     resolver: yupResolver(shippingLabelSchema),
   });
 
-  const { mutate: updateParcelsCount } = useMutation(updateParcel, {
+  const { mutate: updateParcelsCount } = useMutation({
+    mutationFn: updateParcel,
     onSuccess: () => {
-      queryClient.invalidateQueries(dashboardQueryKeys.DASHBOARD_TODAY_PARCELS);
-      queryClient.invalidateQueries(dashboardQueryKeys.DASHBOARD_TMR_PARCELS);
+      queryClient.invalidateQueries({
+        queryKey: dashboardQueryKeys.DASHBOARD_TODAY_PARCELS,
+      });
+      queryClient.invalidateQueries({
+        queryKey: dashboardQueryKeys.DASHBOARD_TMR_PARCELS,
+      });
     },
   });
 

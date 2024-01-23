@@ -3,7 +3,7 @@ import { PackageStatus } from "../types";
 import { classNames } from "../utils/styles/classNames";
 import { format } from "date-fns";
 import { useLocation, useParams } from "react-router-dom";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { fetchParcelByTrackingNumber } from "../services/api/fetchParcelByTrackingNumber";
 import { useMemo } from "react";
 import { NavLogo } from "../components/NavLogo";
@@ -91,13 +91,11 @@ const generateStep = (status: PackageStatus, createdAt: Date) => {
 export const Tracking = () => {
   const { pathname } = useLocation();
   const { trackingNumber = "" } = useParams();
-  const { isLoading, isIdle, data } = useQuery(
-    ["/parcel/tracking", trackingNumber],
-    () => fetchParcelByTrackingNumber(trackingNumber.toUpperCase()),
-    {
-      enabled: !!trackingNumber,
-    },
-  );
+  const { isLoading, isPending, data } = useQuery({
+    queryKey: ["/parcel/tracking", trackingNumber],
+    queryFn: () => fetchParcelByTrackingNumber(trackingNumber.toUpperCase()),
+    enabled: !!trackingNumber,
+  });
 
   const steps: {
     status: PackageStatus;
@@ -143,7 +141,7 @@ export const Tracking = () => {
     return [];
   }, [data]);
 
-  if (isLoading || isIdle || !data || !data.length) {
+  if (isLoading || isPending || !data || !data.length) {
     return <p>loading</p>;
   }
 

@@ -6,7 +6,7 @@ import {
   useEffect,
   useRef,
 } from "react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { checkIsEmailExist } from "../services/api/checkIsEmailExist";
 import { fetchDepot } from "../services/api/fetchDepot";
 import { fetchUser } from "../services/api/fetchUser";
@@ -62,7 +62,9 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
     data: isEmailExists,
     isSuccess: isEmailExistsSuccess,
     isLoading: isEmailExistsLoading,
-  } = useQuery(["email exists", token], () => checkIsEmailExist(token), {
+  } = useQuery({
+    queryKey: ["email exists", token],
+    queryFn: () => checkIsEmailExist(token),
     enabled: !!token,
     initialData: queryClient.getQueryData(["email exists", token]),
     initialDataUpdatedAt: () =>
@@ -73,27 +75,28 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
     data: userData,
     isSuccess: isUserSuccess,
     isLoading: isUserDataLoading,
-    isIdle,
+    isPending,
     refetch: refetchUser,
-  } = useQuery(["user", token], () => fetchUser(token), {
+  } = useQuery({
+    queryKey: ["user", token],
+    queryFn: () => fetchUser(token),
     enabled: !!token,
     initialData: queryClient.getQueryData(["user", token]),
     initialDataUpdatedAt: () =>
       queryClient.getQueryState(["user", token])?.dataUpdatedAt,
   });
 
-  const { data: depotData, isLoading: isDepotDataLoading } = useQuery(
-    ["depot", token],
-    () => fetchDepot(token),
-    {
-      enabled: !!token && isUserSuccess,
-      initialData: queryClient.getQueryData(["depot", token]),
-      initialDataUpdatedAt: () =>
-        queryClient.getQueryState(["depot", token])?.dataUpdatedAt,
-    },
-  );
+  const { data: depotData, isLoading: isDepotDataLoading } = useQuery({
+    queryKey: ["depot", token],
+    queryFn: () => fetchDepot(token),
+    enabled: !!token && isUserSuccess,
+    initialData: queryClient.getQueryData(["depot", token]),
+    initialDataUpdatedAt: () =>
+      queryClient.getQueryState(["depot", token])?.dataUpdatedAt,
+  });
 
-  const { mutate, isLoading: isCreateUserLoading } = useMutation(createUser, {
+  const { mutate, isPending: isCreateUserLoading } = useMutation({
+    mutationFn: createUser,
     onSuccess(data) {
       queryClient.setQueryData(["user", token], data);
       queryClient.setQueryData(["email exists", token], true);
@@ -147,7 +150,7 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
           isEmailExistsLoading ||
           isUserDataLoading ||
           auth0.isLoading ||
-          (isIdle && auth0.isAuthenticated),
+          (isPending && auth0.isAuthenticated),
         isDepotLoading: isDepotDataLoading,
         isValidCustomer:
           !!auth0AccessToken?.permissions?.includes("customer") &&

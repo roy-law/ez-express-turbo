@@ -7,7 +7,7 @@ import {
   Image,
   Font,
 } from "@react-pdf/renderer";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { fetchParcel } from "../services/api";
 import { useParams } from "react-router-dom";
 import { useUserContext } from "../providers/UserContextProvider";
@@ -302,13 +302,13 @@ export function ShippingLabel() {
   const { parcelId = "", numberOfParcels = 1 } = useParams();
   const { user, depot, token } = useUserContext();
   const { parcelQueryKeys } = useQueryKeys();
-  const { data, isLoading, isIdle } = useQuery(
-    parcelQueryKeys(parcelId)[QUERY_NAME.PARCEL_DETAIL],
-    () => fetchParcel({ parcelId, token: token?.token }),
-    { enabled: !!parcelId && !!depot && !!user },
-  );
+  const { data, isLoading, isPending } = useQuery({
+    queryKey: parcelQueryKeys(parcelId)[QUERY_NAME.PARCEL_DETAIL],
+    queryFn: () => fetchParcel({ parcelId, token: token?.token }),
+    enabled: !!parcelId && !!depot && !!user,
+  });
 
-  if (isLoading || isIdle) {
+  if (isLoading || isPending) {
     return <p>is loading</p>;
   }
 

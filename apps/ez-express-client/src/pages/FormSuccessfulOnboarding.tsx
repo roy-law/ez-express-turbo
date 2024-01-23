@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../providers/UserContextProvider";
 import useWindowSize from "react-use/lib/useWindowSize";
 import Confetti from "react-confetti";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateUser } from "../services/api";
 import { AuthedRoutes, UnAuthedRoutes } from "../types/routes";
 import { useState } from "react";
@@ -15,7 +15,8 @@ export function FormSuccessfulOnboarding() {
   const [isPrivacyChecked, setIsPrivacyChecked] = useState(false);
 
   const queryClient = useQueryClient();
-  const { mutate } = useMutation(updateUser, {
+  const { mutate } = useMutation({
+    mutationFn: updateUser,
     onSuccess(data) {
       queryClient.setQueryData(["user", token?.token], data);
       navigate(AuthedRoutes.DASHBOARD);

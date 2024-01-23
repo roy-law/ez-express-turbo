@@ -1,7 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { BackToHeader } from "../components/BackToHeader";
 import { AddressFormTwoCols } from "../components/forms/AddressFormTwoCols";
 import { CompanyFormTwoCols } from "../components/forms/CompanyFormTwoCol";
@@ -18,7 +18,8 @@ export function Settings() {
 
   const { user, depot } = useUserContext();
 
-  const { mutate: mutateDepot } = useMutation(updateDepot, {
+  const { mutate: mutateDepot } = useMutation({
+    mutationFn: updateDepot,
     onSuccess(data) {
       queryClient.setQueryData(["depot", token?.token], data);
       setShow(true);
@@ -30,7 +31,8 @@ export function Settings() {
     },
   });
 
-  const { mutate: mutateUser } = useMutation(updateUser, {
+  const { mutate: mutateUser } = useMutation({
+    mutationFn: updateUser,
     onSuccess(data) {
       queryClient.setQueryData(["user", token?.token], data);
     },

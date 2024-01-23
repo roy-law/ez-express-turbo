@@ -1,6 +1,6 @@
 import { ExclamationCircleIcon } from "@heroicons/react/20/solid";
 import { useForm } from "react-hook-form";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { updateUser } from "../services/api";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -26,7 +26,8 @@ export function FormCompany() {
   });
 
   const queryClient = useQueryClient();
-  const { mutate } = useMutation(updateUser, {
+  const { mutate } = useMutation({
+    mutationFn: updateUser,
     onSuccess(data) {
       queryClient.setQueryData(["user", token?.token], data);
       navigate(AuthedOnboardRoutes.ONBOARD_FORM_DEPOT);

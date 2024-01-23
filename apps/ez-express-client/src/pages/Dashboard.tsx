@@ -8,10 +8,10 @@ import { useParcelsDayApiV2 } from "../hooks/api";
 export function Dashboard() {
   const today = format(new Date(), "yyyy-MM-dd");
   const tmr = format(add(new Date(), { days: 1 }), "yyyy-MM-dd");
-  const { data: todayData, isLoading, isIdle } = useParcelsDayApiV2(today);
+  const { data: todayData, isLoading, isPending } = useParcelsDayApiV2(today);
   const { data: tmrData } = useParcelsDayApiV2(tmr);
 
-  if (isLoading || isIdle) {
+  if (isLoading || isPending) {
     return (
       <main className="flex justify-center items-center flex-1 flex-col">
         <PacmanLoader className="ring-indigo-500" color="#4F46E5" size={18} />

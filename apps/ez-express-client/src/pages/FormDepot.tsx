@@ -1,6 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { AddressForm } from "../components/forms/AddressForm";
 import { ContactForm } from "../components/forms/ContactForm";
@@ -37,7 +37,8 @@ export function FormDepot() {
 
   const queryClient = useQueryClient();
   const { token } = useUserContext();
-  const { mutate } = useMutation(createDepot, {
+  const { mutate } = useMutation({
+    mutationFn: createDepot,
     onSuccess(data) {
       queryClient.setQueryData(["depot", token?.token], data);
       navigate(AuthedOnboardRoutes.ONBOARD_SUCCESSFUL);

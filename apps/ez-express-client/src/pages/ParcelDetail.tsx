@@ -1,7 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { BackToHeader } from "../components/BackToHeader";
 import { CustomerInfoFormTwoCols } from "../components/forms/CustomerInfoFormTwoCols";
@@ -37,13 +37,18 @@ export function ParcelDetail() {
   const { depot, token } = useUserContext();
 
   const queryClient = useQueryClient();
-  const { mutate } = useMutation(updateParcel, {
+  const { mutate } = useMutation({
+    mutationFn: updateParcel,
     onSuccess(data) {
-      queryClient.invalidateQueries(
-        parcelQueryKeys(parcelId)[QUERY_NAME.PARCEL_DETAIL],
-      );
-      queryClient.invalidateQueries(dashboardQueryKeys.DASHBOARD_TMR_PARCELS);
-      queryClient.invalidateQueries(dashboardQueryKeys.DASHBOARD_TODAY_PARCELS);
+      queryClient.invalidateQueries({
+        queryKey: parcelQueryKeys(parcelId)[QUERY_NAME.PARCEL_DETAIL],
+      });
+      queryClient.invalidateQueries({
+        queryKey: dashboardQueryKeys.DASHBOARD_TMR_PARCELS,
+      });
+      queryClient.invalidateQueries({
+        queryKey: dashboardQueryKeys.DASHBOARD_TODAY_PARCELS,
+      });
 
       setShow("Succesfully saved!");
 
@@ -63,14 +68,19 @@ export function ParcelDetail() {
     },
   });
 
-  const { mutate: cancelParcel } = useMutation(updateParcelStatus, {
+  const { mutate: cancelParcel } = useMutation({
+    mutationFn: updateParcelStatus,
     onSuccess(data) {
       // Cancelled post action
-      queryClient.invalidateQueries(
-        parcelQueryKeys(parcelId)[QUERY_NAME.PARCEL_DETAIL],
-      );
-      queryClient.invalidateQueries(dashboardQueryKeys.DASHBOARD_TMR_PARCELS);
-      queryClient.invalidateQueries(dashboardQueryKeys.DASHBOARD_TODAY_PARCELS);
+      queryClient.invalidateQueries({
+        queryKey: parcelQueryKeys(parcelId)[QUERY_NAME.PARCEL_DETAIL],
+      });
+      queryClient.invalidateQueries({
+        queryKey: dashboardQueryKeys.DASHBOARD_TMR_PARCELS,
+      });
+      queryClient.invalidateQueries({
+        queryKey: dashboardQueryKeys.DASHBOARD_TODAY_PARCELS,
+      });
 
       setShow("Parcel Cancelled! Redirecting back to dashboard..");
 

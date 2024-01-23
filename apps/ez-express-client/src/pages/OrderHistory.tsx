@@ -1,12 +1,13 @@
 import { useOrderHistoryApi } from "../hooks/api";
 import { add, format, sub } from "date-fns";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export const formatCurrency = (price: number | string) => {
   return `$ ${Number(price).toFixed(2)}`;
 };
 
 export function OrderHistory() {
+  const navigate = useNavigate();
   const to = format(add(new Date(), { days: 1 }), "yyyy-MM-dd");
   const from = format(sub(new Date(to), { days: 30 }), "yyyy-MM-dd");
   const { data, isSuccess } = useOrderHistoryApi({ from, to });
@@ -62,12 +63,16 @@ export function OrderHistory() {
                         </dd>
                       </div>
                     </dl>
-                    <a
-                      href={`/dashboard/order-history/invoice-day/${order.day}`}
+                    <button
+                      onClick={() =>
+                        navigate(
+                          `/dashboard/order-history/invoice-day/${order.day}`,
+                        )
+                      }
                       className="mt-6 flex w-full items-center justify-center rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:w-auto"
                     >
                       View Invoice
-                    </a>
+                    </button>
                   </div>
 
                   <table className="mt-4 w-full text-gray-500 sm:mt-6">
@@ -152,12 +157,14 @@ export function OrderHistory() {
                               )}
                             </td>
                             <td className="whitespace-nowrap py-6 text-right font-medium">
-                              <a
-                                href={`/parcel/${product._id}`}
+                              <button
+                                onClick={() =>
+                                  navigate(`/parcel/${product._id}`)
+                                }
                                 className="text-indigo-600"
                               >
                                 View
-                              </a>
+                              </button>
                             </td>
                           </tr>
                         ))}
