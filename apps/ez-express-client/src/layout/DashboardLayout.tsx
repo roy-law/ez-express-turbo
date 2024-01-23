@@ -8,20 +8,11 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { NavLogo } from "../components/NavLogo";
 import { AuthedRoutes, UnAuthedRoutes } from "../types/routes";
-import { useAuth0AccessToken } from "../hooks/useAuth0AccessToken";
-import { useUserApi } from "../hooks/useUserApi";
-import { useEmailExistApi } from "../hooks/useEmailExistApi";
-import { useDepotApi } from "../hooks/useDepotApi";
 
 export function DashboardLayout() {
   const navigate = useNavigate();
   const location = useLocation();
   const { logout } = useAuth0();
-
-  useAuth0AccessToken();
-  useUserApi();
-  useEmailExistApi();
-  useDepotApi();
 
   // Use name for the map key to prevent errors
   const navigation = useMemo(
@@ -96,17 +87,17 @@ export function DashboardLayout() {
                     <div className="hidden md:ml-6 md:flex md:space-x-8">
                       {/* Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" */}
                       {navigation.map((path) => (
-                        <a
-                          href={path.href}
+                        <button
                           key={path.name}
                           className={
                             path.isActive
                               ? "inline-flex items-center border-b-2 border-indigo-500 px-1 pt-1 text-sm font-medium text-gray-900"
                               : "inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-900"
                           }
+                          onClick={() => navigate(path.href)}
                         >
                           {path.name}
-                        </a>
+                        </button>
                       ))}
                     </div>
                   </div>
@@ -150,16 +141,20 @@ export function DashboardLayout() {
                             {profileMenu.map((menu) => (
                               <Menu.Item key={menu.name}>
                                 {({ active }) => (
-                                  <a
+                                  <button
                                     className={classNames(
                                       active ? "bg-gray-100" : "",
                                       "block px-4 py-2 text-sm text-gray-700",
                                     )}
-                                    href={menu.href}
-                                    onClick={menu.onClick}
+                                    key={menu.name}
+                                    onClick={() =>
+                                      menu.onClick
+                                        ? menu.onClick()
+                                        : navigate(menu.href)
+                                    }
                                   >
                                     {menu.name}
-                                  </a>
+                                  </button>
                                 )}
                               </Menu.Item>
                             ))}
