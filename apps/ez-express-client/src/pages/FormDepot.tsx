@@ -4,10 +4,10 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { AddressForm } from "../components/forms/AddressForm";
 import { ContactForm } from "../components/forms/ContactForm";
-import { useUserContext } from "../providers/UserContextProvider";
 import { createDepot } from "../services/api";
 import { depotSchema } from "../types";
 import { AuthedOnboardRoutes } from "../types/routes";
+import { useAccessToken } from "../store/auth/useAuthStore";
 
 export function FormDepot() {
   const navigate = useNavigate();
@@ -36,11 +36,11 @@ export function FormDepot() {
   });
 
   const queryClient = useQueryClient();
-  const { token } = useUserContext();
+  const token = useAccessToken();
   const { mutate } = useMutation({
     mutationFn: createDepot,
     onSuccess(data) {
-      queryClient.setQueryData(["depot", token?.token], data);
+      queryClient.setQueryData(["depot", token], data);
       navigate(AuthedOnboardRoutes.ONBOARD_SUCCESSFUL);
     },
   });
@@ -49,7 +49,7 @@ export function FormDepot() {
     <form
       className="flex flex-col flex-1"
       onSubmit={handleSubmit((data) => {
-        mutate({ token: token?.token, ...data });
+        mutate({ token: token, ...data });
       })}
     >
       <div className="flex-1">

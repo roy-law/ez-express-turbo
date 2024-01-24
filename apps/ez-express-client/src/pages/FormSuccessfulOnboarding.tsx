@@ -1,15 +1,16 @@
 import { useNavigate } from "react-router-dom";
-import { useUserContext } from "../providers/UserContextProvider";
 import useWindowSize from "react-use/lib/useWindowSize";
 import Confetti from "react-confetti";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateUser } from "../services/api";
 import { AuthedRoutes, UnAuthedRoutes } from "../types/routes";
 import { useState } from "react";
+import { useAccessToken, useIsCustomer } from "../store/auth/useAuthStore";
 
 export function FormSuccessfulOnboarding() {
   const navigate = useNavigate();
-  const { token } = useUserContext();
+  const token = useAccessToken();
+  const isCustomer = useIsCustomer();
   const { width, height } = useWindowSize();
   const [isTermsChecked, setIsTermsChecked] = useState(false);
   const [isPrivacyChecked, setIsPrivacyChecked] = useState(false);
@@ -18,7 +19,7 @@ export function FormSuccessfulOnboarding() {
   const { mutate } = useMutation({
     mutationFn: updateUser,
     onSuccess(data) {
-      queryClient.setQueryData(["user", token?.token], data);
+      queryClient.setQueryData(["user", token], data);
       navigate(AuthedRoutes.DASHBOARD);
     },
   });
@@ -82,14 +83,10 @@ export function FormSuccessfulOnboarding() {
         <div className="flex justify-center items-center">
           <button
             type="button"
-            disabled={
-              !token?.permissions?.includes("customer") ||
-              !isTermsChecked ||
-              !isPrivacyChecked
-            }
+            disabled={!isCustomer || !isTermsChecked || !isPrivacyChecked}
             onClick={() =>
               mutate({
-                token: token?.token,
+                token: token,
                 isTermsChecked: isTermsChecked && isPrivacyChecked,
               })
             }

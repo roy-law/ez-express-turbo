@@ -26,12 +26,13 @@ const UserSchema = new Schema(
   {
     /** required fields*/
     status: { type: Schema.Types.Number, enum: UserStatus, required: true },
-    email: { type: Schema.Types.String, required: true , unique: true},
+    email: { type: Schema.Types.String, required: true, unique: true },
 
     /** not required fields*/
     firstName: { type: Schema.Types.String, required: false },
     lastName: { type: Schema.Types.String, required: false },
     name: { type: Schema.Types.String, required: false },
+    picture: { type: Schema.Types.String, required: false },
     companyName: { type: Schema.Types.String, required: false },
     hstNumber: { type: Schema.Types.String, required: false },
     locale: { type: Schema.Types.String, required: false },

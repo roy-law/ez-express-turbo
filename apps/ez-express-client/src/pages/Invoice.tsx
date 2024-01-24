@@ -2,9 +2,10 @@ import { add, format, sub } from "date-fns";
 import { useParams } from "react-router-dom";
 import { useOrderHistoryApi } from "../hooks/api";
 
-import { useUserContext } from "../providers/UserContextProvider";
 import { formatCurrency } from "./OrderHistory";
 import { BackToHeader } from "../components/BackToHeader";
+import { useUser } from "../store/user/useUserStore";
+import { useDepot } from "../store/depot/useDepotStore";
 
 export const Invoice = () => {
   const { day } = useParams();
@@ -14,7 +15,8 @@ export const Invoice = () => {
   const order = !data
     ? { totalAmount: 0, day: "", parcels: [] }
     : data?.find((i) => i.day === day);
-  const { depot, user } = useUserContext();
+  const user = useUser();
+  const depot = useDepot();
 
   const subtotal = (Number(order?.totalAmount) / 1.13).toFixed(2);
   const subtotalTax = ((Number(order?.totalAmount) / 1.13) * 0.13).toFixed(2);

@@ -17,15 +17,17 @@ import {
 import { BackToHeader } from "../components/BackToHeader";
 import { AuthedRoutes } from "../types/routes";
 import { PackageSizeRadioOptions } from "../components/forms/PackageSizeRadioOptions";
-import { useUserContext } from "../providers/UserContextProvider";
 import InputMask from "react-input-mask";
 import { getCityByPostalCode } from "@repo/utils";
 import { useQueryKeys } from "../hooks/useQueryKeys";
 import { ExclamationTriangleIcon } from "@heroicons/react/20/solid";
+import { useAccessToken } from "../store/auth/useAuthStore";
+import { useDepot } from "../store/depot/useDepotStore";
 
 export function FormParcel() {
   const navigate = useNavigate();
-  const { depot, token } = useUserContext();
+  const token = useAccessToken();
+  const depot = useDepot();
   const { dashboardQueryKeys } = useQueryKeys();
 
   const {
@@ -84,7 +86,7 @@ export function FormParcel() {
         depotId: depot?._id,
         price: selectedPackageSize.priceValue,
         packageSize: selectedPackageSize.id,
-        token: token?.token,
+        token,
       });
   };
 

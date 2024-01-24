@@ -10,10 +10,12 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { fetchParcel } from "../services/api";
 import { useParams } from "react-router-dom";
-import { useUserContext } from "../providers/UserContextProvider";
 import { getCityByPostalCode } from "@repo/utils";
 import { QUERY_NAME, useQueryKeys } from "../hooks/useQueryKeys";
 import MicrosoftYahei from "../assets/MicrosoftYahei.ttf";
+import { useAccessToken } from "../store/auth/useAuthStore";
+import { useUser } from "../store/user/useUserStore";
+import { useDepot } from "../store/depot/useDepotStore";
 
 interface ShippingLabelPageProps {
   number: number;
@@ -53,7 +55,7 @@ const ShippingLabelPage = ({
 }: ShippingLabelPageProps) => {
   return (
     <Page size="C6" style={{ flex: 1, padding: 10, paddingBottom: 0 }}>
-      <View style={{ justifyContent: "center", alignItems: "center" }}>
+      <View style={{ justifyContent: "center", alignItems: "flex-start" }}>
         {customerRef && (
           <Text style={{ top: 5, right: 5, position: "absolute" }}>
             #{customerRef}
@@ -174,13 +176,13 @@ const ShippingLabelPage = ({
               {toName}
             </Text>
             <Text style={{ paddingBottom: 2 }}>
-              {toAddress.split(",")[0].trim()}
+              {toAddress.split(",")[0]?.trim()}
             </Text>
             <Text style={{ paddingBottom: 2 }}>
-              {toAddress.split(",")[1].trim()}
+              {toAddress.split(",")[1]?.trim()}
             </Text>
             <Text style={{ paddingBottom: 2 }}>
-              {toAddress.split(",")[2].trim()}
+              {toAddress.split(",")[2]?.trim()}
             </Text>
           </View>
         </View>
@@ -260,13 +262,13 @@ const ShippingLabelPage = ({
               {fromName}
             </Text>
             <Text style={{ paddingBottom: 2, fontSize: 10 }}>
-              {fromAddress.split(",")[0].trim()}
+              {fromAddress.split(",")[0]?.trim()}
             </Text>
             <Text style={{ paddingBottom: 2, fontSize: 10 }}>
-              {fromAddress.split(",")[1].trim()}
+              {fromAddress.split(",")[1]?.trim()}
             </Text>
             <Text style={{ paddingBottom: 2, fontSize: 10 }}>
-              {fromAddress.split(",")[2].trim()}
+              {fromAddress.split(",")[2]?.trim()}
             </Text>
             <Text style={{ paddingBottom: 2, fontSize: 10 }}>{fromPhone}</Text>
           </View>
@@ -300,11 +302,13 @@ const ShippingLabelPage = ({
 
 export function ShippingLabel() {
   const { parcelId = "", numberOfParcels = 1 } = useParams();
-  const { user, depot, token } = useUserContext();
+  const token = useAccessToken();
+  const user = useUser();
+  const depot = useDepot();
   const { parcelQueryKeys } = useQueryKeys();
-  const { data, isLoading, isPending } = useQuery({
+  const { data, isSuccess, isLoading, isPending } = useQuery({
     queryKey: parcelQueryKeys(parcelId)[QUERY_NAME.PARCEL_DETAIL],
-    queryFn: () => fetchParcel({ parcelId, token: token?.token }),
+    queryFn: () => fetchParcel({ parcelId, token }),
     enabled: !!parcelId && !!depot && !!user,
   });
 

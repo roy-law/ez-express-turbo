@@ -13,7 +13,6 @@ import {
   getPackageOptionByPostalCode,
   usePackageSizeOptions,
 } from "../hooks/usePackageSizeOptions";
-import { useUserContext } from "../providers/UserContextProvider";
 import { updateParcelStatus } from "../services/api";
 import { updateParcel } from "../services/api/updateParcel";
 import {
@@ -24,6 +23,8 @@ import {
 } from "../types";
 import { AuthedRoutes } from "../types/routes";
 import { QUERY_NAME, useQueryKeys } from "../hooks/useQueryKeys";
+import { useAccessToken } from "../store/auth/useAuthStore";
+import { useDepot } from "../store/depot/useDepotStore";
 
 export function ParcelDetail() {
   const { dashboardQueryKeys, parcelQueryKeys } = useQueryKeys();
@@ -34,7 +35,8 @@ export function ParcelDetail() {
   });
   const [show, setShow] = useState("");
 
-  const { depot, token } = useUserContext();
+  const token = useAccessToken();
+  const depot = useDepot();
 
   const queryClient = useQueryClient();
   const { mutate } = useMutation({
@@ -185,7 +187,7 @@ export function ParcelDetail() {
               depotId: depot?._id,
               packageSize: selectedPackageSize.id,
               price: selectedPackageSize.priceValue,
-              token: token?.token,
+              token,
             });
           }
         })}
@@ -236,7 +238,7 @@ export function ParcelDetail() {
               cancelParcel({
                 parcelId: parcelId ?? "",
                 status: PackageStatus.Cancelled,
-                token: token?.token,
+                token,
               })
             }
             className="rounded-md bg-red-600 disabled:bg-gray-500 py-2 px-3 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"

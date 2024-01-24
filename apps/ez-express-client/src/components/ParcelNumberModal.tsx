@@ -6,10 +6,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { shippingLabelSchema } from "../types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateParcel } from "../services/api";
-import { useUserContext } from "../providers/UserContextProvider";
 import { useQueryKeys } from "../hooks/useQueryKeys";
 import { useNavigate } from "react-router-dom";
 import { isChrome } from "react-device-detect";
+import { useAccessToken } from "../store/auth/useAuthStore";
 
 export default function ParcelNumberModal({
   parcelsCount,
@@ -24,7 +24,7 @@ export default function ParcelNumberModal({
 }) {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const { token } = useUserContext();
+  const token = useAccessToken();
   const { dashboardQueryKeys } = useQueryKeys();
 
   const {
@@ -32,6 +32,7 @@ export default function ParcelNumberModal({
     handleSubmit,
     reset,
     formState: { errors },
+    getValues,
   } = useForm({
     defaultValues: {
       numberOfLabels: 1,
@@ -48,6 +49,20 @@ export default function ParcelNumberModal({
       queryClient.invalidateQueries({
         queryKey: dashboardQueryKeys.DASHBOARD_TMR_PARCELS,
       });
+      const numberOfLabels = getValues("numberOfLabels");
+      if (isChrome) {
+        console.log(
+          `/shippinglabel/${Math.abs(numberOfLabels)}/${parcelId}`,
+          "_blank",
+        );
+        window.open(
+          `/shippinglabel/${Math.abs(numberOfLabels)}/${parcelId}`,
+          "_blank",
+        );
+      } else {
+        navigate(`/shippinglabel/${Math.abs(numberOfLabels)}/${parcelId}`);
+      }
+      onClose();
     },
   });
 
@@ -78,21 +93,10 @@ export default function ParcelNumberModal({
           className="fixed inset-0 z-10 overflow-y-auto"
           onSubmit={handleSubmit((data) => {
             updateParcelsCount({
-              token: token?.token,
+              token,
               parcelsCount: data.numberOfLabels,
               _id: parcelId,
             });
-            if (isChrome) {
-              window.open(
-                `/shippinglabel/${Math.abs(data.numberOfLabels)}/${parcelId}`,
-                "_blank",
-              );
-            } else {
-              navigate(
-                `/shippinglabel/${Math.abs(data.numberOfLabels)}/${parcelId}`,
-              );
-            }
-            onClose();
           })}
         >
           <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">

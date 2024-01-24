@@ -6,12 +6,12 @@ import { updateUser } from "../services/api";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { companySchema } from "../types";
 import { AuthedOnboardRoutes } from "../types/routes";
-import { useUserContext } from "../providers/UserContextProvider";
 import InputMask from "react-input-mask";
+import { useAccessToken } from "../store/auth/useAuthStore";
 
 export function FormCompany() {
   const navigate = useNavigate();
-  const { token } = useUserContext();
+  const token = useAccessToken();
 
   const {
     register,
@@ -29,7 +29,7 @@ export function FormCompany() {
   const { mutate } = useMutation({
     mutationFn: updateUser,
     onSuccess(data) {
-      queryClient.setQueryData(["user", token?.token], data);
+      queryClient.setQueryData(["user", token], data);
       navigate(AuthedOnboardRoutes.ONBOARD_FORM_DEPOT);
     },
   });
@@ -38,7 +38,7 @@ export function FormCompany() {
     <form
       className="flex flex-col flex-1"
       onSubmit={handleSubmit((data) => {
-        mutate({ token: token?.token, status: 2, ...data });
+        mutate({ token: token, status: 2, ...data });
       })}
     >
       <div className="m-10 space-y-6 pt-8 sm:space-y-5 sm:pt-10 flex-1">

@@ -44,7 +44,7 @@ export const depotSchema = object({
           ...mississauga,
           ...ajax,
           ...pickering,
-          ...stouffville
+          ...stouffville,
         ];
 
         return (

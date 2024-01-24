@@ -17,7 +17,6 @@ import { ShippingLabel } from "./pages/ShippingLabel";
 import { Tracking } from "./pages/Tracking";
 import { AuthProvider } from "./providers/AuthProvider";
 import { ReactQueryProvider } from "./providers/ReactQueryProvider";
-import { UserContextProvider } from "./providers/UserContextProvider";
 import {
   AuthedRoutes,
   UnAuthedRoutes,
@@ -25,6 +24,10 @@ import {
 } from "./types/routes";
 import { PrivacyPolicy } from "./pages/PrivacyPolicy";
 import { TermsAndConditions } from "./pages/TermsAndConditions";
+import { useAuth0AccessToken } from "./hooks/useAuth0AccessToken";
+import { useUserApi } from "./hooks/useUserApi";
+import { useEmailExistApi } from "./hooks/useEmailExistApi";
+import { useDepotApi } from "./hooks/useDepotApi";
 
 export const router = createBrowserRouter([
   {
@@ -123,6 +126,11 @@ export const router = createBrowserRouter([
 ]);
 
 function Router() {
+  useAuth0AccessToken();
+  useUserApi();
+  useEmailExistApi();
+  useDepotApi();
+
   return <RouterProvider router={router} />;
 }
 
@@ -130,9 +138,7 @@ export function App() {
   return (
     <ReactQueryProvider>
       <AuthProvider>
-        <UserContextProvider>
-          <Router />
-        </UserContextProvider>
+        <Router />
       </AuthProvider>
     </ReactQueryProvider>
   );

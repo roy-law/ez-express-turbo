@@ -1,11 +1,15 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useUserStore } from "../store/user/useUserStore";
+import { useUser } from "../store/user/useUserStore";
 import { fetchDepot } from "../services/api/fetchDepot";
 import { useEffect } from "react";
+import { useDepotActions } from "../store/depot/useDepotStore";
+import { useAccessToken } from "../store/auth/useAuthStore";
 
 export const useDepotApi = () => {
   const queryClient = useQueryClient();
-  const { token, userData, setDepotData } = useUserStore();
+  const token = useAccessToken();
+  const userData = useUser();
+  const { setDepotData } = useDepotActions();
 
   const { data, isSuccess } = useQuery({
     queryKey: ["depot", token],

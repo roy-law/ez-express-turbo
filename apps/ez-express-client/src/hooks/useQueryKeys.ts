@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from "react";
-import { useUserContext } from "../providers/UserContextProvider";
 import { add, format } from "date-fns";
+import { useAccessToken } from "../store/auth/useAuthStore";
 
 export const QUERY_KEYS = {
   DASHBOARD_PARCELS: "dashboard parcels",
@@ -14,7 +14,7 @@ export enum QUERY_NAME {
 }
 
 export const useQueryKeys = () => {
-  const { token } = useUserContext();
+  const token = useAccessToken();
 
   const dashboardQueryKeys = useMemo(() => {
     const today = format(new Date(), "yyyy-MM-dd");
@@ -23,21 +23,21 @@ export const useQueryKeys = () => {
       [QUERY_NAME.DASHBOARD_TODAY_PARCELS]: [
         QUERY_KEYS.DASHBOARD_PARCELS,
         today,
-        token?.token,
+        token,
       ],
       [QUERY_NAME.DASHBOARD_TMR_PARCELS]: [
         QUERY_KEYS.DASHBOARD_PARCELS,
         tmr,
-        token?.token,
+        token,
       ],
     };
-  }, [token?.token]);
+  }, [token]);
 
   const parcelQueryKeys = useCallback(
     (parcelId?: string) => ({
-      [QUERY_NAME.PARCEL_DETAIL]: [QUERY_KEYS.PARCEL, parcelId, token?.token],
+      [QUERY_NAME.PARCEL_DETAIL]: [QUERY_KEYS.PARCEL, parcelId, token],
     }),
-    [token?.token],
+    [token],
   );
 
   return { dashboardQueryKeys, parcelQueryKeys };

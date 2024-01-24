@@ -1,11 +1,12 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useUserStore } from "../store/user/useUserStore";
 import { checkIsEmailExist } from "../services/api/checkIsEmailExist";
 import { useEffect } from "react";
+import { useAccessToken, useAuthActions } from "../store/auth/useAuthStore";
 
 export const useEmailExistApi = () => {
   const queryClient = useQueryClient();
-  const { token, setIsEmailExist } = useUserStore();
+  const token = useAccessToken();
+  const { setIsEmailExist } = useAuthActions();
 
   const { isSuccess, data } = useQuery({
     queryKey: ["email exists", token],

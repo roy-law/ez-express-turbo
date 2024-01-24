@@ -7,21 +7,23 @@ import { AddressFormTwoCols } from "../components/forms/AddressFormTwoCols";
 import { CompanyFormTwoCols } from "../components/forms/CompanyFormTwoCol";
 import { ContactFormTwoCols } from "../components/forms/ContactFormTwoCols";
 import Notification from "../components/Notification";
-import { useUserContext } from "../providers/UserContextProvider";
 import { updateDepot, updateUser } from "../services/api";
 import { userInformationUpdateSchema } from "../types/combined";
+import { useAccessToken } from "../store/auth/useAuthStore";
+import { useUser } from "../store/user/useUserStore";
+import { useDepot } from "../store/depot/useDepotStore";
 
 export function Settings() {
   const queryClient = useQueryClient();
-  const { token } = useUserContext();
+  const token = useAccessToken();
+  const user = useUser();
+  const depot = useDepot();
   const [show, setShow] = useState(false);
-
-  const { user, depot } = useUserContext();
 
   const { mutate: mutateDepot } = useMutation({
     mutationFn: updateDepot,
     onSuccess(data) {
-      queryClient.setQueryData(["depot", token?.token], data);
+      queryClient.setQueryData(["depot", token], data);
       setShow(true);
 
       // Dismiss successful message
@@ -34,7 +36,7 @@ export function Settings() {
   const { mutate: mutateUser } = useMutation({
     mutationFn: updateUser,
     onSuccess(data) {
-      queryClient.setQueryData(["user", token?.token], data);
+      queryClient.setQueryData(["user", token], data);
     },
   });
 
@@ -102,11 +104,10 @@ export function Settings() {
       <form
         className="px-8"
         onSubmit={handleSubmit((data) => {
-          if (depot)
-            mutateDepot({ ...data, _id: depot?._id, token: token?.token });
+          if (depot) mutateDepot({ ...data, _id: depot?._id, token: token });
           if (user)
             mutateUser({
-              token: token?.token,
+              token: token,
               companyName: data.companyName,
               hstNumber: data.hstNumber,
             });
