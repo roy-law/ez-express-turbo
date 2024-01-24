@@ -1,12 +1,17 @@
-import { useAuth0 } from "@auth0/auth0-react";
 import { useEffect } from "react";
 import { matchPath, useLocation, useNavigate } from "react-router-dom";
-import { useUserContext } from "../providers/UserContextProvider";
 import { AuthedRoutes, UnAuthedRoutes } from "../types/routes";
+import { useIsUserApproved } from "../store/user/useUserStore";
+import { useIsCustomer } from "../store/auth/useAuthStore";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const useProtectionNavigation = () => {
   const navigate = useNavigate();
-  const { isValidCustomer, isUserLoading } = useUserContext();
+  const isCustomer = useIsCustomer();
+  const isUserApproved = useIsUserApproved(!!isCustomer);
+  const isValidCustomer = isCustomer && isUserApproved;
+
+  const isFetching = useQueryClient().isFetching();
   const { pathname } = useLocation();
 
   useEffect(() => {
@@ -15,12 +20,12 @@ export const useProtectionNavigation = () => {
       .filter(Boolean);
 
     // just keep loading
-    if (isUserLoading) return;
+    if (isFetching) return;
 
     // Does not care onboard form
     // navigate them back to landing when they are not authenticated but using a authenticated path
     if (!isValidCustomer && matchedAuthedRoutes.length > 0) {
       return navigate(UnAuthedRoutes.LANDING);
     }
-  }, [pathname, isValidCustomer, isUserLoading, navigate]);
+  }, [pathname, isValidCustomer, isFetching, navigate]);
 };
