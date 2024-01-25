@@ -115,16 +115,18 @@ export default function CSVReader({ onUploadAccepted }: Props) {
       config={{
         header: true,
         transformHeader: (header: string) => camelize(header),
-        transform: (value: CSVParcel) => ({
-          ...value,
-          postalCode: value.postalCode.toUpperCase(),
-        }),
       }}
       onUploadAccepted={(results: any) => {
         // console.log("---------------------------");
         // console.log(results.data);
         // console.log("---------------------------");
-        onUploadAccepted && onUploadAccepted(results.data);
+        onUploadAccepted &&
+          onUploadAccepted(
+            results.data.map((parcel: CSVParcel) => ({
+              ...parcel,
+              postalCode: parcel.postalCode.toUpperCase(),
+            })),
+          );
         setZoneHover(false);
       }}
       onDragOver={(event: DragEvent) => {
