@@ -115,6 +115,10 @@ export default function CSVReader({ onUploadAccepted }: Props) {
       config={{
         header: true,
         transformHeader: (header: string) => camelize(header),
+        transform: (value: CSVParcel) => ({
+          ...value,
+          postalCode: value.postalCode.toUpperCase(),
+        }),
       }}
       onUploadAccepted={(results: any) => {
         // console.log("---------------------------");
