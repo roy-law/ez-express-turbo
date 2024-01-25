@@ -32,6 +32,7 @@ export const createParcelV2 = async (req: Request, res: Response) => {
     wechat,
     notes,
     customerRef,
+    parcelsCount,
   } = req.body;
 
   const trackingNumber = generateTrackingNumber();
@@ -82,7 +83,7 @@ export const createParcelV2 = async (req: Request, res: Response) => {
       customerRef, //Optional
 
       // Generated
-      parcelsCount: 1,
+      parcelsCount: parcelsCount || 1,
       trackingNumber,
       qrcode,
       province: ProvinceOntario,
