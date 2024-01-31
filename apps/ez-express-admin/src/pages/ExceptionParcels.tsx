@@ -196,9 +196,9 @@ export const ExceptionParcels = () => {
                               mutateUpdateSchedule({
                                 token: token?.token,
                                 exceptionScheduleId: data._id,
-                                parcels: data.parcels.filter(
-                                  (p: any) => p._id !== parcel._id,
-                                ),
+                                parcelsTracking: data.parcels
+                                  .filter((p: any) => p._id !== parcel._id)
+                                  .map((p: any) => p.trackingNumber),
                               })
                             }
                             type="button"
