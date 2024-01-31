@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchParcel } from "../../services/api";
-import { QUERY_NAME, useQueryKeys } from "../useQueryKeys";
-import { useAccessToken } from "../../store/auth/useAuthStore";
+import { fetchParcel } from "../services/api";
+import { QUERY_NAME, useQueryKeys } from "./useQueryKeys";
+import { useAccessToken } from "../store/auth/useAuthStore";
 
 export const useParcelApi = ({ parcelId = "" }: { parcelId?: string }) => {
   const token = useAccessToken();

@@ -1,6 +1,6 @@
 import { add, format, sub } from "date-fns";
 import { useParams } from "react-router-dom";
-import { useOrderHistoryApi } from "../hooks/api";
+import { useOrderHistoryApi } from "../hooks/useOrderHistoryApi";
 
 import { formatCurrency } from "./OrderHistory";
 import { BackToHeader } from "../components/BackToHeader";

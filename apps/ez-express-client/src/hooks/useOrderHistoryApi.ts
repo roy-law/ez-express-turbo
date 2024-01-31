@@ -1,8 +1,8 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { fetchOrderHistory } from "../../services/api";
-import { useAccessToken } from "../../store/auth/useAuthStore";
-import { useDepot } from "../../store/depot/useDepotStore";
+import { fetchOrderHistory } from "../services/api";
+import { useAccessToken } from "../store/auth/useAuthStore";
+import { useDepot } from "../store/depot/useDepotStore";
 
 export const useOrderHistoryApi = ({
   from,
