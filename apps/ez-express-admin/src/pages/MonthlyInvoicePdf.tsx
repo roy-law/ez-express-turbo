@@ -6,6 +6,9 @@ import { fetchAllDepots, fetchOrderHistory } from "../services/api";
 import { PDFViewer, Document, Page, View, Text } from "@react-pdf/renderer";
 import lodash from "lodash";
 import { ChangeEvent, useState } from "react";
+import { CalculationRow } from "../components/invoice/CalculationRow";
+import { PageNumberFooter } from "../components/invoice/PageNumberFooter";
+import { PackageSize, PackageStatus } from "../types";
 
 export const MonthlyInvoicePdf = () => {
   const { month, depotId = "" } = useParams();
@@ -49,6 +52,30 @@ export const MonthlyInvoicePdf = () => {
     setDiscount(e.target.value);
   };
 
+  const subtotal = lodash.sumBy(data, (parcel) => parcel.price);
+  const subtotalWithDiscount = discount ? subtotal - Number(discount) : 0;
+  const hst = 0.13;
+  const total = discount
+    ? subtotalWithDiscount * (1 + hst)
+    : subtotal * (1 + hst);
+  const numberOfcompletedParcels = data?.filter(
+    (d: any) => d.price > 0 && d.status == PackageStatus.Delivered,
+  ).length;
+
+  const numberOfFailureOrders = data?.filter(
+    (d: any) =>
+      d.status == PackageStatus.Cancelled || d.status == PackageStatus.Rejected,
+  ).length;
+  const numberOfReturnOrders = data?.filter(
+    (d: any) => d.status == PackageStatus.Returned,
+  ).length;
+  const numberOfExceptionalOrders = data?.filter(
+    (d: any) => d.packageSize == PackageSize.Exceptional,
+  ).length;
+  const numberOfStandardOrders = data?.filter(
+    (d: any) => d.packageSize == PackageSize.Standard,
+  ).length;
+
   if (!data || !depotData) {
     return <p>loading</p>;
   }
@@ -87,12 +114,13 @@ export const MonthlyInvoicePdf = () => {
                 flexDirection: "row",
                 marginBottom: 30,
               }}
+              fixed
             >
               <Text style={{ textAlign: "left", borderBottom: 1 }}>
                 Invoice #{`${format(date, "yyyy-MM-dd")}`}
               </Text>
               <Text style={{ fontSize: 12 }}>
-                services from {from} to {to}
+                Services from {from} to {to}
               </Text>
             </View>
             <View
@@ -125,6 +153,7 @@ export const MonthlyInvoicePdf = () => {
               <Text>H.S.T. Registration Number: {"77237 2917 RT0001"}</Text>
             </View>
             <View
+              wrap
               style={{
                 flexDirection: "row",
                 justifyContent: "space-between",
@@ -148,6 +177,7 @@ export const MonthlyInvoicePdf = () => {
             {data &&
               lodash.sortBy(data, ["day"]).map((d: any, index: number) => (
                 <View
+                  wrap
                   key={d._id}
                   style={{
                     flexDirection: "row",
@@ -193,104 +223,48 @@ export const MonthlyInvoicePdf = () => {
                   </Text>
                 </View>
               ))}
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginTop: 10,
-              }}
-            >
-              <Text style={{ width: "20%" }}>{""}</Text>
-              <Text style={{ width: "30%" }}>{""}</Text>
-              <Text style={{ width: "15%", textAlign: "left" }}>{""}</Text>
-              <Text style={{ width: "15%", textAlign: "right" }}>
-                {"Subtotal"}
-              </Text>
-              <Text style={{ width: "20%", textAlign: "right" }}>
-                ${lodash.sumBy(data, (parcel) => parcel.price).toFixed(2)}
-              </Text>
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                marginTop: 5,
-                alignItems: "center",
-              }}
-            >
-              <Text style={{ width: "20%" }}>{""}</Text>
-              <Text style={{ width: "30%" }}>{""}</Text>
-              <Text style={{ width: "15%", textAlign: "left" }}>{""}</Text>
-              <Text style={{ width: "15%", textAlign: "right" }}>
-                {"HST 13%"}
-              </Text>
-              <Text style={{ width: "20%", textAlign: "right" }}>
-                $
-                {lodash
-                  .sumBy(data, (parcel) => parcel.price * parcel.province.tax)
-                  .toFixed(2)}
-              </Text>
-            </View>
+            <CalculationRow
+              label="Completed Parcels / Total"
+              value={`${numberOfcompletedParcels} / ${data.length} `}
+            />
+            <CalculationRow
+              label="Cancelled/Rejected Parcels"
+              value={`${numberOfFailureOrders}`}
+            />
+            <CalculationRow
+              label="Returned Parcels"
+              value={`${numberOfReturnOrders}`}
+            />
+            <CalculationRow
+              label="Exceptional Parcels"
+              value={`${numberOfExceptionalOrders}`}
+            />
+            <CalculationRow
+              label="Standard Parcels"
+              value={`${numberOfStandardOrders}`}
+            />
+            <CalculationRow
+              label="Subtotal"
+              value={`$ ${subtotal.toFixed(2)}`}
+            />
             {!!discount && (
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  marginTop: 5,
-                  alignItems: "center",
-                }}
-              >
-                <Text style={{ width: "20%" }}>{""}</Text>
-                <Text style={{ width: "30%" }}>{""}</Text>
-                <Text style={{ width: "15%", textAlign: "left" }}>{""}</Text>
-                <Text style={{ width: "15%", textAlign: "right" }}>
-                  {"Discount"}
-                </Text>
-                <Text style={{ width: "20%", textAlign: "right" }}>
-                  - $ {Number(discount).toFixed(2)}
-                </Text>
-              </View>
-            )}
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                marginTop: 5,
-                alignItems: "center",
-              }}
-            >
-              <Text style={{ width: "20%" }}>{""}</Text>
-              <Text style={{ width: "30%" }}>{""}</Text>
-              <Text style={{ width: "15%", textAlign: "left" }}>{""}</Text>
-              <Text style={{ width: "15%", textAlign: "right" }}>
-                {"Total"}
-              </Text>
-              <Text style={{ width: "20%", textAlign: "right" }}>
-                $
-                {(
-                  lodash.sumBy(
-                    data,
-                    (parcel) => parcel.price * (1 + parcel.province.tax),
-                  ) - Number(discount)
-                ).toFixed(2)}
-              </Text>
-            </View>
-            <View
-              style={{
-                flex: 1,
-                justifyContent: "flex-end",
-                alignItems: "flex-end",
-                padding: 10,
-              }}
-            >
-              <Text
-                render={({ pageNumber, totalPages }) =>
-                  `${pageNumber} / ${totalPages}`
-                }
-                fixed
+              <CalculationRow
+                label="Discount"
+                value={`$ ${Number(discount).toFixed(2)}`}
               />
-            </View>
+            )}
+            {!!discount && (
+              <CalculationRow
+                label="(Subtotal - Discount)"
+                value={`$ ${subtotalWithDiscount.toFixed(2)}`}
+              />
+            )}
+            <CalculationRow
+              label="HST 13%"
+              value={`$ ${((discount ? subtotalWithDiscount : subtotal) * hst).toFixed(2)}`}
+            />
+            <CalculationRow label="Total" value={`$ ${total.toFixed(2)}`} />
+            <PageNumberFooter />
           </Page>
         </Document>
       </PDFViewer>
