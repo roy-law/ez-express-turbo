@@ -61,6 +61,10 @@ export const toronto = [
   "M6R",
   "M6S",
   "M6N",
+  "M4B",
+  "M4C",
+  "M4G",
+  "M4H",
 ];
 
 export const etobicoke = [
@@ -77,7 +81,7 @@ export const etobicoke = [
   "M9W",
 ];
 
-export const eastYork = ["M4B", "M4C", "M4G", "M4H"];
+export const eastYork = [];
 
 export const northYork = [
   "M2H",

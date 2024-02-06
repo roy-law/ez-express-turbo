@@ -8,7 +8,6 @@ import { CustomerInfoFormTwoCols } from "../components/forms/CustomerInfoFormTwo
 import { PackageSizeRadioOptionsTwoCols } from "../components/forms/PackageSizeRadioOptionsTwoCols";
 import { ParcelAddressFormTwoCols } from "../components/forms/ParcelAddressFormTwoCols";
 import Notification from "../components/Notification";
-import { useParcelApi } from "../hooks/api";
 import {
   getPackageOptionByPostalCode,
   usePackageSizeOptions,
@@ -25,6 +24,7 @@ import { AuthedRoutes } from "../types/routes";
 import { QUERY_NAME, useQueryKeys } from "../hooks/useQueryKeys";
 import { useAccessToken } from "../store/auth/useAuthStore";
 import { useDepot } from "../store/depot/useDepotStore";
+import { useParcelApi } from "../hooks/useParcelApi";
 
 export function ParcelDetail() {
   const { dashboardQueryKeys, parcelQueryKeys } = useQueryKeys();

@@ -3,7 +3,7 @@ import { PacmanLoader } from "react-spinners";
 import { DeliveriesTable } from "../components/dashboard/DeliveriesTable";
 import { EmptyDeliveriesTableState } from "../components/dashboard/EmptyDeliveriesTableState";
 import { format, add } from "date-fns";
-import { useParcelsDayApiV2 } from "../hooks/api";
+import { useParcelsDayApiV2 } from "../hooks/useParcelsDayApi";
 
 export function Dashboard() {
   const today = format(new Date(), "yyyy-MM-dd");

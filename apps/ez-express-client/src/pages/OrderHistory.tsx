@@ -1,6 +1,6 @@
-import { useOrderHistoryApi } from "../hooks/api";
 import { add, format, sub } from "date-fns";
 import { Link, useNavigate } from "react-router-dom";
+import { useOrderHistoryApi } from "../hooks/useOrderHistoryApi";
 
 export const formatCurrency = (price: number | string) => {
   return `$ ${Number(price).toFixed(2)}`;
