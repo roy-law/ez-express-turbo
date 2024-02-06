@@ -232,7 +232,7 @@ export const ExceptionParcels = () => {
           onClick: (parcel) =>
             mutateUpdateSchedule({
               token: token?.token,
-              exceptionScheduleId: data._id,
+              exceptionScheduleId: data?._id,
               parcels: [...data.parcels, parcel],
             }),
         }}

@@ -15,4 +15,5 @@ export const AuthedRoutes = {
   PARCEL_MANAGEMENT: "/dashboard/parcel-management",
   CUSTOMER_INVOICE: "/dashboard/customer-invoice",
   MONTHLY_INVOICE: "/monthly-invoice/:depotId/:month",
+  POSTAL_CODE: "/dashboard/postal-code",
 };

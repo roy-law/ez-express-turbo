@@ -1,5 +1,6 @@
 import {
   ajax,
+  eastYork,
   etobicoke,
   markham,
   mississauga,
@@ -19,11 +20,15 @@ export function getPriceByPostalCode(postalCode: string): number {
   // Scarborough
   if ([...markham, ...scarborough, ...richmondHill].includes(first3Code)) {
     return 7;
-  } else if ([...northYork, ...vaughan, ...toronto].includes(first3Code)) {
+  } else if (
+    [...northYork, ...vaughan, ...toronto, ...eastYork].includes(first3Code)
+  ) {
     return 8;
   } else if ([...newmarket, ...etobicoke].includes(first3Code)) {
     return 10;
-  } else if ([...mississauga, ...ajax, ...pickering, ...stouffville].includes(first3Code)) {
+  } else if (
+    [...mississauga, ...ajax, ...pickering, ...stouffville].includes(first3Code)
+  ) {
     return 12;
   } else {
     return 0;

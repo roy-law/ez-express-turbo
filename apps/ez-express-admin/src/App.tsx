@@ -17,6 +17,7 @@ import { CustomerInvoice } from "./pages/CustomerInvoice";
 import { MonthlyInvoicePdf } from "./pages/MonthlyInvoicePdf";
 import { ParcelManagement } from "./pages/ParcelManagement";
 import { NewOrders } from "./pages/NewOrders";
+import { PostalCodes } from "./pages/PostalCodes";
 
 export const router = createBrowserRouter([
   {
@@ -70,7 +71,10 @@ export const router = createBrowserRouter([
             path: AuthedRoutes.CUSTOMER_INVOICE,
             element: <CustomerInvoice />,
           },
-          {},
+          {
+            path: AuthedRoutes.POSTAL_CODE,
+            element: <PostalCodes />,
+          },
         ],
       },
     ],
