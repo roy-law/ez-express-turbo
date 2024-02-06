@@ -34,10 +34,6 @@ const all = [
     price: 10,
   },
   {
-    areaName: "East York",
-    postalCode: eastYork,
-  },
-  {
     areaName: "North York",
     postalCode: northYork,
     price: 8,

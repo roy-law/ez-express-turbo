@@ -62,6 +62,13 @@ export const Dashboard = () => {
         >
           New Orders
         </button>
+        <button
+          onClick={() => navigate(`/dashboard/postal-code`)}
+          type="button"
+          className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+        >
+          Postal Code
+        </button>
         <CSVLink data={data} headers={headers}>
           Download OptimoRoute
         </CSVLink>
