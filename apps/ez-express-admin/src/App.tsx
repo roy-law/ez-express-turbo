@@ -18,6 +18,10 @@ import { MonthlyInvoicePdf } from "./pages/MonthlyInvoicePdf";
 import { ParcelManagement } from "./pages/ParcelManagement";
 import { NewOrders } from "./pages/NewOrders";
 import { PostalCodes } from "./pages/PostalCodes";
+import {
+  useSplitClient,
+  useSplitTreatments,
+} from "@splitsoftware/splitio-react";
 
 export const router = createBrowserRouter([
   {
@@ -96,6 +100,9 @@ function Router() {
 }
 
 export function App() {
+  useSplitTreatments({ names: ["deliverySchedule"], trafficType: "anon" });
+  useSplitClient();
+
   return (
     <ReactQueryProvider>
       <AuthProvider>

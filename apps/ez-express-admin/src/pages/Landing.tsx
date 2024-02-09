@@ -3,11 +3,21 @@ import { useNavigate } from "react-router-dom";
 import { NavLogo } from "../components/NavLogo";
 import { useUserContext } from "../providers/UserContextProvider";
 import { AuthedRoutes } from "../types/routes";
+import { useSplitTreatments } from "@splitsoftware/splitio-react";
 
 export const Landing = () => {
   const { loginWithRedirect, isAuthenticated } = useAuth0();
-  const { token } = useUserContext();
+  const { email, token } = useUserContext();
   const navigate = useNavigate();
+
+  useSplitTreatments({
+    names: ["deliverySchedule"],
+    trafficType: "anon",
+    splitKey: email,
+    attributes: {
+      email: email || "",
+    },
+  });
 
   const isValidAdmin = token?.permissions?.includes("admin") && isAuthenticated;
 

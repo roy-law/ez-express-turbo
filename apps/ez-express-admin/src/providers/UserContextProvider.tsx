@@ -17,11 +17,13 @@ interface AccessToken {
 interface UserContextType {
   token?: AccessToken;
   isValidAdmin: boolean;
+  email?: string;
 }
 
 const UserContext = createContext<UserContextType>({
   token: undefined,
   isValidAdmin: false,
+  email: undefined,
 });
 
 interface UserContextProviderProps {
@@ -40,6 +42,7 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
       value={{
         token: auth0AccessToken,
         isValidAdmin: isValidAdmin ?? false,
+        email: auth0.user?.email,
       }}
     >
       {children}
