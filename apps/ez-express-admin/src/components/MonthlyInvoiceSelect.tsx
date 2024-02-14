@@ -7,7 +7,7 @@ import { format } from "date-fns";
 
 const Months = {
   January: "00",
-  Feburary: "01",
+  February: "01",
   March: "02",
   April: "03",
   May: "04",
