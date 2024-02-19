@@ -1,15 +1,53 @@
-import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
-import { useCallback, useMemo, useState } from "react";
-import { AreaName } from "../types";
-import { useAdminParcels } from "../hooks/useAdminParcels";
-import { classNames } from "../utils/styles/classNames";
-import lodash from "lodash";
+import { useEffect, useState } from "react";
+import { BackToHeader } from "../components/BackToHeader";
+import { RouteColorPaint } from "../components/parcelPlanning/RouteColorPaint";
+import { Stack } from "@mui/material";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import { useForm } from "react-hook-form";
+import { useAdminTodayParcels } from "../hooks/useAdminTodayParcels";
+import {
+  APIProvider,
+  Map,
+  Marker as GMarker,
+  useMapsLibrary,
+  useMap,
+} from "@vis.gl/react-google-maps";
 
-const containerStyle = {
-  width: "100%",
-  height: "90%",
+const defaultMarkerColor = "#E04531";
+
+const markerIconFactory = (color: string) => ({
+  path: "M11 22C17.0751 22 22 17.0751 22 11C22 4.92487 17.0751 0 11 0C4.92487 0 0 4.92487 0 11C0 17.0751 4.92487 22 11 22Z",
+  fillColor: color,
+  fillOpacity: 1,
+  strokeWeight: 0,
+  scale: 1,
+});
+
+export const generateRandomColor = (existingColors: string[]): string => {
+  const letters = "0123456789ABCDEF";
+  let color = "#";
+
+  do {
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+  } while (existingColors.includes(color));
+
+  return color;
 };
 
+const deliverySchedule = [
+  {
+    color: "#E08538",
+    label: "Route 1",
+  },
+  {
+    color: "#56220b",
+    label: "Route 2",
+  },
+];
+
+// Example of a marker props
 const center = {
   id: 1,
   geo: {
@@ -18,141 +56,193 @@ const center = {
   },
 };
 
+type Schedule = {
+  color?: string;
+  label?: string;
+  routes?: any[];
+};
+
+type ControlsProps = {
+  onDrawComplete: (e: any) => void;
+};
+const Directions = () => {
+  const map = useMap();
+  const routesLibrary = useMapsLibrary("routes");
+  const [directionsService, setDirectionsService] =
+    useState<google.maps.DirectionsService>();
+  const [directionRenderer, setDirectionRenderer] =
+    useState<google.maps.DirectionsRenderer>();
+  const [routes, setRoutes] = useState<google.maps.DirectionsRoute[]>([]);
+
+  const leg = routes[0]?.legs[0];
+  useEffect(() => {
+    if (!routesLibrary || !map) return;
+
+    setDirectionsService(new routesLibrary.DirectionsService());
+    setDirectionRenderer(new routesLibrary.DirectionsRenderer({ map }));
+  }, [routesLibrary, map]);
+
+  useEffect(() => {
+    if (!directionsService || !directionRenderer) return;
+
+    directionsService
+      .route({
+        origin: "3320 Midland Ave, Scarborough, ON M1V 4A7",
+        destination: "500 College St, Toronto, ON",
+        waypoints: [
+          { location: "190 Borough Dr, Scarborough, ON M1P 0B6" },
+          { location: "14 Cornerstone Road Markham ON CA" },
+        ],
+        travelMode: google.maps.TravelMode.DRIVING,
+        avoidTolls: true,
+        provideRouteAlternatives: true,
+        optimizeWaypoints: true,
+        region: "ca",
+        drivingOptions: {
+          departureTime: new Date(),
+          trafficModel: google.maps.TrafficModel.BEST_GUESS,
+        },
+        unitSystem: google.maps.UnitSystem.METRIC,
+      })
+      .then((response) => {
+        console.log(response);
+        directionRenderer.setDirections(response);
+        setRoutes(response.routes);
+      });
+  }, [directionsService, directionRenderer]);
+  if (!leg) return null;
+
+  return <div />;
+};
+
+const Controls = ({ onDrawComplete }: ControlsProps) => {
+  const drawing = useMapsLibrary("drawing");
+  const core = useMapsLibrary("core");
+  const map = useMap();
+  const [drawingManager, setDrawingManager] = useState<any>(null);
+
+  useEffect(() => {
+    if (drawing && core && !drawingManager) {
+      const manager = new drawing.DrawingManager({
+        drawingMode: drawing.OverlayType.MARKER,
+        drawingControl: true,
+        drawingControlOptions: {
+          position: core?.ControlPosition.TOP_CENTER,
+          drawingModes: [
+            google.maps.drawing.OverlayType.MARKER,
+            google.maps.drawing.OverlayType.CIRCLE,
+            google.maps.drawing.OverlayType.POLYGON,
+            google.maps.drawing.OverlayType.POLYLINE,
+            google.maps.drawing.OverlayType.RECTANGLE,
+          ],
+        },
+        markerOptions: {
+          icon: "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png",
+        },
+      });
+
+      setDrawingManager(manager);
+    }
+  }, [drawing, core, drawingManager, map]);
+
+  useEffect(() => {
+    if (drawingManager && map) {
+      drawingManager.setMap(map);
+    }
+  }, [drawingManager, map]);
+
+  useEffect(() => {
+    if (core && drawingManager) {
+      core.event.addListener(
+        drawingManager,
+        "rectanglecomplete" as any,
+        (e: any) => {
+          onDrawComplete(e);
+          drawingManager.setDrawingMode(null);
+          e.setMap(null);
+        }
+      );
+    }
+  }, [drawingManager, core, onDrawComplete]);
+
+  return <div className="directions" />;
+};
+
 export const ParcelPlaning = () => {
-  const { isLoaded } = useJsApiLoader({
-    id: "google-map-script",
-    googleMapsApiKey: import.meta.env.VITE_GOOGLE_API_KEY || "",
-    region: "ca",
-  });
-  const allParcels = useAdminParcels();
+  const [schedules, setSchedules] = useState(deliverySchedule);
+  const [selectedSchedule, setSelectedSchedule] = useState<Schedule>({});
+  // const { isLoaded } = useJsApiLoader({
+  //   id: "google-map-script",
+  //   googleMapsApiKey: import.meta.env.VITE_GOOGLE_API_KEY || "",
+  //   region: "ca",
+  // });
+
+  const { data: parcels } = useAdminTodayParcels();
+
+  const [mapParcels, setMapParcels] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (parcels && parcels.length > 0 && mapParcels.length < 1) {
+      const tParcels = parcels.map((p: any) => {
+        return {
+          id: p._id,
+          geo: p.geo.geometry.location,
+          color: defaultMarkerColor,
+        };
+      });
+
+      setMapParcels(tParcels);
+    }
+  }, [parcels, mapParcels]);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<{ newRouteName: string }>();
 
   const [routes, setRoutes] = useState([]);
 
-  const onClick = (parcel: any) => {
-    const parcelIndex = routes.findIndex((i: any) => i.id === parcel.id);
+  // const [map, setMap] = useState(null);
 
-    if (parcelIndex >= 0) {
-      const newRoutes = routes.slice(0, parcelIndex);
-      setRoutes(newRoutes);
-    } else {
-      const newRoutes = [...routes, parcel];
-      setRoutes(newRoutes as never[]);
-    }
+  // const onLoad = useCallback(
+  //   (map: any) => {
+  //     // This is just an example of getting and using the map instance!!! don't just blindly copy!
+  //     // Use default center
+  //     if (mapParcels && mapParcels.length > 0) {
+  //       const bounds = new window.google.maps.LatLngBounds(mapParcels[0].geo);
+  //       mapParcels.map((i: any) => {
+  //         bounds.extend(i.geo);
+  //       });
+  //       map.fitBounds(bounds);
+  //       setMap(map);
+  //     }
+  //   },
+  //   [mapParcels],
+  // );
+
+  // const onUnmount = useCallback((map: any) => {
+  //   setMap(null);
+  // }, []);
+
+  //Add drag to select parcels on google maps
+
+  const handleMarkerClick = (parcel: any) => {
+    setMapParcels((currMapParcels) => [
+      ...currMapParcels.filter((p: any) => p.id !== parcel.id),
+      { ...parcel, color: selectedSchedule.color },
+    ]);
   };
 
-  const defaultAreaBadges = useMemo(() => {
-    return allParcels.map((area) => ({
-      title: area.data?.name,
-      areaName: area.data?.areaName,
-      isDisabled: area.data?.count === 0,
-      count: area.data?.count,
-    }));
-  }, [allParcels]);
-
-  const [activeBadges, setActiveBadges] = useState<AreaName[]>([]);
-
-  const parcels = useMemo(() => {
-    // Replace with actual parcels data
-    const areaMatchesFilter = allParcels.filter(
-      //   (area) => area.data?.areaName === AreaName.Markham,
-      (area) => {
-        return activeBadges.includes(area.data?.areaName as AreaName);
-      },
-    );
-
-    const areaData = areaMatchesFilter.reduce((pre: any, curr: any) => {
-      if (curr.data?.pacakges) {
-        return [...pre, ...curr.data.pacakges];
-      }
-      return pre;
-    }, []);
-
-    if (areaData && areaData.length) {
-      const orignal2 = areaData.map((i: any) => ({
-        id: i._id,
-        geo: { ...i.geo.geometry.location },
-      }));
-
-      return orignal2.map((m: any) => ({
-        ...m,
-        label: `${
-          routes.findIndex((r: any) => r.id === m.id) >= 0
-            ? routes.findIndex((r: any) => r.id === m.id) + 1
-            : ""
-        }`,
-        opacity: routes.findIndex((r: any) => r.id === m.id) >= 0 ? 0.6 : 1,
-      }));
-    } else {
-      return [];
-    }
-  }, [routes, allParcels, activeBadges]);
-
-  const [map, setMap] = useState(null);
-
-  const onLoad = useCallback(
-    (map: any) => {
-      // This is just an example of getting and using the map instance!!! don't just blindly copy!
-      // Use default center
-      if (parcels && parcels.length > 0) {
-        const bounds = new window.google.maps.LatLngBounds(parcels[0].geo);
-        parcels.map((i: any) => {
-          bounds.extend(i.geo);
-        });
-        map.fitBounds(bounds);
-        setMap(map);
-      }
-    },
-    [parcels],
-  );
-
-  const onUnmount = useCallback((map: any) => {
-    setMap(null);
-  }, []);
-
-  const onClickBadge = (clickedAreaName: AreaName) => {
-    if (activeBadges.includes(clickedAreaName)) {
-      const newActiveBadges = lodash.remove(activeBadges, (x) => {
-        return x !== clickedAreaName;
-      });
-      setActiveBadges(newActiveBadges);
-    } else {
-      setActiveBadges([...activeBadges, clickedAreaName]);
-    }
-  };
-
-  return isLoaded ? (
+  return (
     <>
-      <div className="flex flex-row mb-8 flex-wrap">
-        {defaultAreaBadges.map((badge) => (
-          <button
-            onClick={() => onClickBadge(badge.areaName as AreaName)}
-            key={badge.title}
-            disabled={badge.isDisabled}
-            type="button"
-            className={classNames(
-              badge.isDisabled
-                ? `rounded cursor-not-allowed px-2 mr-7 mb-2 py-1 text-s font-semibold text-white shadow-sm bg-gray-500`
-                : `rounded ${
-                    activeBadges.includes(badge.areaName as AreaName)
-                      ? "bg-indigo-800"
-                      : "bg-gray-500"
-                  } relative inline-block px-2 mr-7 mb-2 py-1 text-s font-semibold text-white shadow-sm hover:bg-indigo-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-800`,
-            )}
-          >
-            {badge.title}
-            <span className="absolute -top-2 -right-1 block translate-x-1/2 -translate-y-1/2 transform rounded-full border-2 border-white">
-              <span className="">
-                {badge.count && (
-                  <p className="text-center bg-red-600 px-1.5 py-1 rounded-full text-xs">
-                    {`${badge.count}`}
-                  </p>
-                )}
-              </span>
-            </span>
-          </button>
-        ))}
+      <div>
+        <BackToHeader />
       </div>
-      <GoogleMap
+      <br />
+
+      {/* <GoogleMap
         mapContainerStyle={containerStyle}
         center={center.geo}
         zoom={9}
@@ -166,17 +256,102 @@ export const ParcelPlaning = () => {
         }}
       >
         <>
-          {parcels.map((p: any) => (
-            <Marker
-              position={p.geo}
-              label={p.label}
-              opacity={p.opacity}
-              key={p.id}
-              onClick={() => onClick(p)}
-            />
-          ))}
+          {mapParcels?.length > 0 &&
+            mapParcels.map((p: any) => (
+              <Marker
+                position={p.geo}
+                // label={p.label}
+                // opacity={p.opacity}
+                icon={markerIconFactory(p.color)}
+                key={p.id}
+                onClick={() => handleMarkerClick(p)}
+              />
+            ))}
         </>
-      </GoogleMap>
+      </GoogleMap> */}
+      <APIProvider
+        apiKey={import.meta.env.VITE_GOOGLE_API_KEY || ""}
+        region="ca"
+      >
+        <Map
+          center={center.geo}
+          zoom={9}
+          mapId={"1dae4956060d6c81"}
+          disableDefaultUI
+          disableDoubleClickZoom
+          clickableIcons={false}
+        >
+          <>
+            {mapParcels?.length > 0 &&
+              mapParcels.map((p: any) => (
+                <GMarker
+                  position={p.geo}
+                  // label={p.label}
+                  // opacity={p.opacity}
+                  icon={markerIconFactory(p.color)}
+                  key={p.id}
+                  onClick={() => handleMarkerClick(p)}
+                />
+              ))}
+            <Controls
+              onDrawComplete={(e: any) => {
+                const bounds = e.getBounds();
+                mapParcels.map((p: any) => {
+                  console.log(bounds, p.geo);
+                  if (bounds.contains(p.geo)) {
+                    handleMarkerClick(p);
+                  }
+                });
+              }}
+            />
+            <Directions />
+          </>
+        </Map>
+      </APIProvider>
+
+      <div className="py-5">
+        <Stack direction="row" spacing={1} alignItems="flex-end">
+          {schedules.map((route) => (
+            <Stack key={route.label} alignItems="center">
+              <ArrowDropDownIcon
+                sx={{
+                  color:
+                    selectedSchedule.label === route.label
+                      ? "black"
+                      : "transparent",
+                }}
+              />
+              <RouteColorPaint
+                color={route.color}
+                label={route.label}
+                onClick={() => setSelectedSchedule(route)}
+              />
+            </Stack>
+          ))}
+        </Stack>
+        <form
+          onSubmit={handleSubmit((data) => {
+            setSchedules((currentSchedule) => [
+              ...currentSchedule,
+              {
+                color: generateRandomColor(currentSchedule.map((i) => i.color)),
+                label: data.newRouteName,
+              },
+            ]);
+            reset();
+          })}
+        >
+          <input
+            className="mt-5"
+            placeholder="Enter New Route Name"
+            {...register("newRouteName", {
+              validate: (value) =>
+                schedules.filter((i) => i.label === value).length < 1,
+            })}
+          />
+          <p>{errors.newRouteName?.message}</p>
+        </form>
+      </div>
       <div className="flex flex-row space-x-5 mt-10">
         {/* <button
           type="button"
@@ -186,13 +361,17 @@ export const ParcelPlaning = () => {
         </button> */}
         <button
           type="button"
+          className="flex-1 rounded-md bg-red-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
           className="flex-1 rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
         >
-          Save
+          Create
         </button>
       </div>
     </>
-  ) : (
-    <></>
   );
 };
