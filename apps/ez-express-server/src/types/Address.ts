@@ -108,5 +108,5 @@ export type Address = {
   streetAddress: string;
   unit?: string;
   formattedAddress?: string;
-  geo: GeocodeResult;
+  geo?: GeocodeResult;
 };
