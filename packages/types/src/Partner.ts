@@ -12,8 +12,11 @@ export type OnboardingStatus =
 
 export type Partner = Time & {
   email: string;
+  phone: string;
+  wechat?: string;
   depots?: string[]; // DepotId
   locale?: string;
+  picture?: string;
   name: string;
   firstName?: string;
   lastName?: string;
