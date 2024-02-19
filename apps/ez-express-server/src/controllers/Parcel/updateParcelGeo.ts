@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { countries } from "country-data";
 
 import Parcel from "../../models/Parcel";
-import { ProvinceOntario } from "../../types/Address";
+import { ProvinceOntario } from "@repo/types";
 import { googleClient } from "../../library/GoogleApi";
 import Logging from "../../library/Logging";
 import { optimoRouteClient } from "../../library/OptimoRouteApi";
@@ -23,7 +23,7 @@ export const updateParcelGeo = async (req: Request, res: Response) => {
       { new: true }
     );
 
-    const depot = await Depot.findById(parcel?.depotId)
+    const depot = await Depot.findById(parcel?.depotId);
 
     const geo = await googleClient.geocode({
       params: {
@@ -55,7 +55,7 @@ export const updateParcelGeo = async (req: Request, res: Response) => {
       const shouldTurnOnOptimoroute = process.env.NODE_ENV === "development";
 
       if (shouldTurnOnOptimoroute) {
-      // update order address on Optimoroute
+        // update order address on Optimoroute
         await optimoRouteClient.syncOrder(
           transformParcelToOptimoRouteOrder(doc, depot)
         );

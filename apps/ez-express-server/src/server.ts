@@ -13,6 +13,7 @@ import userRoutes from "./routes/User";
 import scheduleRoutes from "./routes/Schedule";
 import exceptionScheduleRoutes from "./routes/ExceptionSchedule";
 import driverRoutes from "./routes/Driver";
+import parnterRoutes from "./routes/Partner";
 
 const router = express();
 
@@ -77,6 +78,7 @@ const StartServer = () => {
   router.use("/api/depot", depotRoutes);
   router.use("/api/parcel", parcelRoutes);
   router.use("/api/user", userRoutes);
+  router.use("/api/partner", parnterRoutes);
   router.use("/api/schedule", scheduleRoutes);
   router.use("/api/driver", driverRoutes);
   router.use("/api/exceptionSchedule", exceptionScheduleRoutes);

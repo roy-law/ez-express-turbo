@@ -4,8 +4,7 @@ import QRCode from "qrcode";
 import { countries } from "country-data";
 
 import Parcel from "../../models/Parcel";
-import { PackageStatus } from "../../types/Parcel";
-import { ProvinceOntario } from "../../types/Address";
+import { PackageStatus, ProvinceOntario } from "@repo/types";
 import { googleClient } from "../../library/GoogleApi";
 import Logging from "../../library/Logging";
 import User from "../../models/User";

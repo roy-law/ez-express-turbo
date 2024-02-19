@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 
 import Parcel from "../../models/Parcel";
 import Logging from "../../library/Logging";
-import { PackageStatus } from "../../types/Parcel";
+import { PackageStatus } from "@repo/types";
 import { getStartEndOfDayInUTCWithOffset } from "../../utils/getTime";
 
 const tz = "America/Toronto";

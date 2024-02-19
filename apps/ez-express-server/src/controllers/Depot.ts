@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
 import Depot from "../models/Depot";
 import { countries } from "country-data";
-import { ProvinceOntario } from "../types/Address";
+import { ProvinceOntario } from "@repo/types";
 import User from "../models/User";
 import { getAccessTokenArgs } from "../getAccessTokenArgs";
 import { googleClient } from "../library/GoogleApi";

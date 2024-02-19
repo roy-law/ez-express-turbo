@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema } from "mongoose";
-import { Schedule } from "../types/Schedule";
+import { Schedule } from "@repo/types";
 
 const DeliveryScheduleSchema = new Schema(
   {

@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema } from "mongoose";
-import { Employee, EmployeeRole } from "../types/Employee";
+import { Employee, EmployeeRole } from "@repo/types";
 
 const EmployeeSchema = new Schema(
   {
