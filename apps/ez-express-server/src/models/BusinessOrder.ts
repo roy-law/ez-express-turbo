@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema } from "mongoose";
-import { BusinessOrder } from "../types/BusinessOrder";
+import { BusinessOrder } from "@repo/types";
 
 const BusinessOrderSchema = new Schema(
   {

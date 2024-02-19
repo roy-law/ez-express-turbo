@@ -16,6 +16,7 @@
   "private": true,
   "dependencies": {
     "@repo/utils": "*",
+    "@repo/types": "*",
     "@googlemaps/google-maps-services-js": "^3.3.28",
     "axios": "^1.6.2",
     "chalk": "^4.1.2",

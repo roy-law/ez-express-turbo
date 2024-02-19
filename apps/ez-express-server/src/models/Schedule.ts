@@ -1,6 +1,9 @@
-import mongoose, { Document, Schema, SchemaType } from "mongoose";
-import { ServicingAreaName } from "../types/Area";
-import { DriverScheduleType, WorkingShift } from "../types/DriverSchedule";
+import mongoose, { Document, Schema } from "mongoose";
+import {
+  ServicingAreaName,
+  DriverScheduleType,
+  WorkingShift,
+} from "@repo/types";
 
 export interface ISchedule {
   parcelsOrder: string[];

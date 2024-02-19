@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
 import Parcel from "../../models/Parcel";
-import { PackageStatus } from "../../types/Parcel";
+import { PackageStatus } from "@repo/types";
 import Logging from "../../library/Logging";
 import { optimoRouteClient } from "../../library/OptimoRouteApi";
 
@@ -26,7 +26,7 @@ export const updatePackageStatus = async (req: Request, res: Response) => {
             process.env.NODE_ENV === "development";
 
           if (shouldTurnOnOptimoroute) {
-          // delete order on Optimoroute
+            // delete order on Optimoroute
             await optimoRouteClient.deleteOrder(parcel.trackingNumber);
           }
         } else {

@@ -1,10 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
 import Schedule from "../models/Schedule";
-import { ServcingAreaToPostalCodeMap, ServicingAreaName } from "../types/Area";
+import {
+  ServcingAreaToPostalCodeMap,
+  ServicingAreaName,
+  WorkingShift,
+} from "@repo/types";
 import Logging from "../library/Logging";
 import Parcel from "../models/Parcel";
-import { WorkingShift } from "../types/DriverSchedule";
 
 const createSchedule = async (
   req: Request,

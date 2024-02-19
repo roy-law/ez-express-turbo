@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema } from "mongoose";
-import { DispatchingCenter } from "../types/DispatchingCenter";
+import { DispatchingCenter } from "@repo/types";
 
 const DispatchingCenterSchema = new Schema(
   {

@@ -1,8 +1,11 @@
 import mongoose, { Document, Schema } from "mongoose";
-import { IAddress } from "../types/Address";
-import { PackageSize, PackageStatus } from "../types/Parcel";
+import {
+  WorkingShift,
+  IAddress,
+  PackageSize,
+  PackageStatus,
+} from "@repo/types";
 import { GeocodeResult } from "@googlemaps/google-maps-services-js";
-import { WorkingShift } from "../types/DriverSchedule";
 
 interface ITrackingTimeline {
   status: PackageStatus;

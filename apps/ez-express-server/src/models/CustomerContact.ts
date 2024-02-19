@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema } from "mongoose";
-import { CustomerContact } from "../types/CustomerContact";
+import { CustomerContact } from "@repo/types";
 
 const CustomerContactSchema = new Schema(
   {

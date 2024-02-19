@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { countries } from "country-data";
 
 import Parcel from "../../models/Parcel";
-import { ProvinceOntario } from "../../types/Address";
+import { ProvinceOntario } from "@repo/types";
 import { googleClient } from "../../library/GoogleApi";
 import Logging from "../../library/Logging";
 import { optimoRouteClient } from "../../library/OptimoRouteApi";
@@ -56,7 +56,7 @@ export const updateParcel = async (req: Request, res: Response) => {
       const shouldTurnOnOptimoroute = process.env.NODE_ENV === "development";
 
       if (shouldTurnOnOptimoroute) {
-      // update order on Optimoroute
+        // update order on Optimoroute
         await optimoRouteClient.syncOrder(
           transformParcelToOptimoRouteOrder(doc, depot)
         );

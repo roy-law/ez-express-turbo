@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema } from "mongoose";
-import { PartnerDepot } from "../types/PartnerDepot";
+import { PartnerDepot } from "@repo/types";
 
 const PartnerDepotSchema = new Schema(
   {

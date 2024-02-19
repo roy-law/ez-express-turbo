@@ -1,9 +1,10 @@
 import { Time } from "./Time";
 
 export const OnboardingStatus = {
-  Pending: 0,
-  Approved: 1,
-  Rejected: 2,
+  PendingCompany: 0,
+  PendingDepot: 1,
+  Approved: 2,
+  Rejected: 3,
 } as const;
 
 export type OnboardingStatus =
@@ -11,9 +12,15 @@ export type OnboardingStatus =
 
 export type Partner = Time & {
   email: string;
+  phone: string;
+  wechat?: string;
   depots?: string[]; // DepotId
   locale?: string;
-  partnerName: string;
+  picture?: string;
+  name: string;
+  firstName?: string;
+  lastName?: string;
+  companyName: string;
   hstNumber: string;
   isEmailVerified: boolean;
   onboardingStatus: OnboardingStatus;
