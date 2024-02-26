@@ -24,7 +24,7 @@ const PartnerSchema = new Schema(
   },
   {
     timestamps: true,
-    versionKey: true,
+    versionKey: false,
   }
 );
 

@@ -80,7 +80,7 @@ const BusinessOrderSchema = new Schema(
   },
   {
     timestamps: true,
-    versionKey: true,
+    versionKey: false,
   }
 );
 

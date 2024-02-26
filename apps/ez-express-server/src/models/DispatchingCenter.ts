@@ -22,7 +22,7 @@ const DispatchingCenterSchema = new Schema(
     formattedAddress: { type: String, required: false },
     geo: { type: Object, required: false },
   },
-  { timestamps: true, versionKey: true }
+  { timestamps: true, versionKey: false }
 );
 
 export default mongoose.model<DispatchingCenter & Document>(

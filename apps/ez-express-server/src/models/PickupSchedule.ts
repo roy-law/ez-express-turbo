@@ -28,7 +28,7 @@ const PickupScheduleSchema = new Schema(
   },
   {
     timestamps: true,
-    versionKey: true,
+    versionKey: false,
   }
 );
 
