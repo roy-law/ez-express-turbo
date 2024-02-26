@@ -30,7 +30,7 @@ const PartnerDepotSchema = new Schema(
       required: false,
     },
   },
-  { timestamps: true, versionKey: true }
+  { timestamps: true, versionKey: false }
 );
 
 export default mongoose.model<Document & PartnerDepot>(
