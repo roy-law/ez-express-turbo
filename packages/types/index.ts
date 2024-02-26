@@ -1,6 +1,6 @@
 export * from "./src/Address";
 export * from "./src/Area";
-export * from "./src/BusinessOrder";
+export * from "./src/BusinessParcel";
 export * from "./src/Contact";
 export * from "./src/CustomerContact";
 export * from "./src/DispatchingCenter";

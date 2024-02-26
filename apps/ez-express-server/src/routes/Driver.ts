@@ -7,4 +7,4 @@ const router = express.Router();
 router.post("/", checkJwt, checkAdminScope, controller.createDriver);
 router.get("/all", checkJwt, checkAdminScope, controller.readAllDrivers);
 
-export = router;
+export default router;

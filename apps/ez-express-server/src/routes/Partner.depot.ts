@@ -12,4 +12,4 @@ router.post("/", checkJwt, createPartner);
 router.get("/", checkJwt, readPartner);
 router.put("/", checkJwt, updatePartner);
 
-export = router;
+export default router;

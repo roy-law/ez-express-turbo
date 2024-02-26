@@ -14,11 +14,11 @@ export const userSchema = object({
   locale: string().required(),
 });
 
-export type OnboardingStatus = 0 | 1 | 2 | 3;
+export type AccountStatus = 0 | 1 | 2 | 3;
 
 export type User = yup.InferType<typeof userSchema>;
 export type UserResponse = User & {
-  status: OnboardingStatus;
+  status: AccountStatus;
   companyName: string;
   hstNumber: string;
 };

@@ -1,3 +1,4 @@
-export { readPartner } from "./readPartner";
-export { createPartner } from "./createPartner";
-export { updatePartner } from "./updatePartner";
+export * from "./readPartners.admin";
+export * from "./createPartner.depot";
+export * from "./updatePartner.depot";
+export * from "./readPartner.depot";

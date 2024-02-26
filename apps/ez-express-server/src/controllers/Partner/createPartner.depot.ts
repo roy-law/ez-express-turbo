@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import Partner from "../../models/Partner";
 import Logging from "../../library/Logging";
 
+// For partner to create a new partner
 export const createPartner = async (
   req: Request,
   res: Response,
@@ -21,7 +22,7 @@ export const createPartner = async (
     depots,
 
     isEmailVerified,
-    onboardingStatus,
+    accountStatus,
   } = req.body;
 
   try {
@@ -45,7 +46,7 @@ export const createPartner = async (
       picture,
       isEmailVerified: isEmailVerified || false,
       locale: locale || "en",
-      onboardingStatus: onboardingStatus || 0,
+      accountStatus: accountStatus || 0,
     });
 
     return res.status(200).send(partner);

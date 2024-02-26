@@ -8,4 +8,4 @@ router.post("/", checkJwt, checkAdminOrDriver, controller.createSchedule);
 router.get("/", checkJwt, checkAdminOrDriver, controller.readSchedule);
 router.put("/", checkJwt, checkAdminOrDriver, controller.updateSchedule);
 
-export = router;
+export default router;

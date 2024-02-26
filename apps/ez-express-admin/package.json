@@ -47,7 +47,8 @@
     "react-use": "^17.4.0",
     "ts-node-dev": "^2.0.0",
     "uuid": "^9.0.1",
-    "yup": "^1.0.2"
+    "yup": "^1.0.2",
+    "@repo/types": "*"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.3",

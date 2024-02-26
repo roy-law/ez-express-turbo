@@ -3,13 +3,13 @@ import { PartnerDepot } from "@repo/types";
 
 const PartnerDepotSchema = new Schema(
   {
+    // Reference
+    partner: { type: Schema.Types.ObjectId, required: true, ref: "Partner" },
+
     // Contact
     phone: { type: String, required: true },
     email: { type: String, required: true },
     wechat: { type: String, required: false },
-
-    // Orders
-    orders: { type: [Schema.Types.ObjectId], ref: "Order", required: false },
 
     // Address
     country: { type: String, required: true },

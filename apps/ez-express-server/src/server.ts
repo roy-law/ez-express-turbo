@@ -8,12 +8,17 @@ import { config } from "./config/config";
 import Logging from "./library/Logging";
 import depotRoutes from "./routes/Depot";
 import parcelRoutes from "./routes/Parcel";
+import customerParcelRoutes from "./routes/BusinessParcel.depot";
+import adminParcelRoutes from "./routes/BusinessParcel.admin";
+import customerBusinessPartnerDepotRoutes from "./routes/PartnerDepot.depot";
+import customerBusinessPartnerRoutes from "./routes/Partner.depot";
+import adminBusinessPartnerRoutes from "./routes/Partner.admin";
 import authHealthCheckRoutes from "./routes/AuthHealthCheck";
 import userRoutes from "./routes/User";
 import scheduleRoutes from "./routes/Schedule";
 import exceptionScheduleRoutes from "./routes/ExceptionSchedule";
 import driverRoutes from "./routes/Driver";
-import parnterRoutes from "./routes/Partner";
+import employeeRoutes from "./routes/Employee";
 
 const router = express();
 
@@ -78,10 +83,20 @@ const StartServer = () => {
   router.use("/api/depot", depotRoutes);
   router.use("/api/parcel", parcelRoutes);
   router.use("/api/user", userRoutes);
-  router.use("/api/partner", parnterRoutes);
   router.use("/api/schedule", scheduleRoutes);
   router.use("/api/driver", driverRoutes);
   router.use("/api/exceptionSchedule", exceptionScheduleRoutes);
+
+  // V2 routes
+  router.use("/api/business-parcel/partner", customerParcelRoutes);
+  router.use("/api/business-parcel/admin", adminParcelRoutes);
+  router.use("/api/employee", employeeRoutes);
+  router.use("/api/business-partner/admin", adminBusinessPartnerRoutes);
+  router.use("/api/business-partner/partner", customerBusinessPartnerRoutes);
+  router.use(
+    "/api/business-partner-depot/partner",
+    customerBusinessPartnerDepotRoutes
+  );
 
   /** Error handling */
   router.use((req, res, next) => {

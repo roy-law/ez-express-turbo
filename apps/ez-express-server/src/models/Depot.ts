@@ -1,6 +1,6 @@
 import mongoose, { Document, Schema } from "mongoose";
-import { IAddress } from "@repo/types";
 import { GeocodeResult } from "@googlemaps/google-maps-services-js";
+import { IAddress } from "@repo/types";
 
 export interface IDepot extends IAddress {
   // Contact

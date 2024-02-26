@@ -1,18 +1,26 @@
 import mongoose, { Document, Schema } from "mongoose";
-import { BusinessOrder } from "@repo/types";
+import { BusinessParcel } from "@repo/types";
 
-const BusinessOrderSchema = new Schema(
+const BusinessParcelSchema = new Schema(
   {
-    // References
+    // The dispatching center that is responsible for this order
     dispatchingCenter: {
       type: Schema.Types.ObjectId,
-      required: true,
+      required: false,
       ref: "DispatchingCenter",
     },
+
+    // The partner that we are picking up from
     partner: { type: Schema.Types.ObjectId, required: true, ref: "Partner" },
-    partnerDepot: { type: Schema.Types.ObjectId, required: true, ref: "Depot" },
-    scheduledDeliveryDay: { type: String, required: false },
-    scheduledDeliveryTimewindow: { type: String, required: false },
+
+    // The partner's depot that we are picking up from (one partner could have multiple depots)
+    partnerDepot: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: "PartnerDepot",
+    },
+
+    // Schedules for delivery, pickup, and return
     deliverySchedule: [
       {
         type: Schema.Types.ObjectId,
@@ -32,6 +40,13 @@ const BusinessOrderSchema = new Schema(
         type: Schema.Types.ObjectId,
         required: false,
         ref: "ReturnSchedule",
+      },
+    ],
+    linkedQrcodes: [
+      {
+        type: Schema.Types.ObjectId,
+        required: false,
+        ref: "AdhocQrcode",
       },
     ],
 
@@ -65,6 +80,14 @@ const BusinessOrderSchema = new Schema(
         createdAt: { type: Date, required: true },
       },
     ],
+    // The delivery time window
+    scheduledDeliveryTimewindow: {
+      type: {
+        from: { type: Date, required: true },
+        to: { type: Date, required: true },
+      },
+      required: false, // This is required for delivery orders
+    },
 
     // To Address
     country: { type: Object, required: true },
@@ -84,7 +107,7 @@ const BusinessOrderSchema = new Schema(
   }
 );
 
-export default mongoose.model<BusinessOrder & Document>(
-  "Order",
-  BusinessOrderSchema
+export default mongoose.model<BusinessParcel & Document>(
+  "BusinessParcel",
+  BusinessParcelSchema
 );
