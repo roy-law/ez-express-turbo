@@ -62,4 +62,4 @@ router.patch(
 );
 router.get("/:parcelId", checkJwt, checkCustomerScope, controller.readParcel);
 
-export = router;
+export default router;

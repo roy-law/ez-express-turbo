@@ -18,4 +18,4 @@ router.put(
   controller.updateExceptionSchedule
 );
 
-export = router;
+export default router;

@@ -9,4 +9,4 @@ router.put("/", checkJwt, controller.updateDepot);
 router.get("/", checkJwt, controller.readDepot);
 router.get("/all", checkJwt, checkAdminScope, controller.readAll);
 
-export = router;
+export default router;

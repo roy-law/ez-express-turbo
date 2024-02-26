@@ -9,4 +9,4 @@ router.get("/", checkJwt, controller.readUser);
 router.put("/", checkJwt, controller.updateUser);
 router.get("/isEmailExist", checkJwt, controller.checkIsUserUniqueByEmail);
 
-export = router;
+export default router;

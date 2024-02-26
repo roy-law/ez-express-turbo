@@ -4,7 +4,12 @@ import { getStartEndOfDayInUTCWithOffset } from "../../utils/getTime";
 import { addDays } from "date-fns";
 import { getCityByPostalCode } from "@repo/utils";
 import { IDepotModel } from "../../models/Depot";
-import { NotificationPreference, OptimoRouteOrder, OrderPriority, OrderType } from "./types";
+import {
+  NotificationPreference,
+  OptimoRouteOrder,
+  OrderPriority,
+  OrderType,
+} from "./types";
 
 export const transformParcelToOptimoRouteOrder = (
   parcel: IParcelModel,

@@ -1,14 +1,15 @@
 import { Time } from "./Time";
 
-export const OnboardingStatus = {
-  PendingCompany: 0,
-  PendingDepot: 1,
-  Approved: 2,
-  Rejected: 3,
+export const AccountStatus = {
+  NotStarted: 0,
+  PendingCompany: 1,
+  PendingDepot: 2,
+  Approved: 3,
+  Rejected: 4,
+  Removed: 5,
 } as const;
 
-export type OnboardingStatus =
-  (typeof OnboardingStatus)[keyof typeof OnboardingStatus];
+export type AccountStatus = (typeof AccountStatus)[keyof typeof AccountStatus];
 
 export type Partner = Time & {
   email: string;
@@ -23,5 +24,5 @@ export type Partner = Time & {
   companyName: string;
   hstNumber: string;
   isEmailVerified: boolean;
-  onboardingStatus: OnboardingStatus;
+  accountStatus: AccountStatus;
 };
