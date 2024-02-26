@@ -18,6 +18,7 @@ import userRoutes from "./routes/User";
 import scheduleRoutes from "./routes/Schedule";
 import exceptionScheduleRoutes from "./routes/ExceptionSchedule";
 import driverRoutes from "./routes/Driver";
+import employeeRoutes from "./routes/Employee";
 
 const router = express();
 
