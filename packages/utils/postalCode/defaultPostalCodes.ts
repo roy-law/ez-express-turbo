@@ -155,7 +155,6 @@ export const mississauga = [
   "L6V",
   "L6T",
   "L6P",
-  "L6S",
   "L6R",
   "L6Y",
   "L6W",

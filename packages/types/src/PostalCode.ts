@@ -100,7 +100,7 @@ export const northYork = [
   "M2R",
   "M3C",
   "M5M",
-  "M9N"
+  "M9N",
 ];
 
 export const markham = ["L3P", "L6E", "L3S", "L6B", "L6C", "L6G", "L3R", "L3T"];
@@ -151,7 +151,6 @@ export const mississauga = [
   "L6V",
   "L6T",
   "L6P",
-  "L6S",
   "L6R",
   "L6Y",
   "L6W",
@@ -168,4 +167,4 @@ export const pickering = ["L1X", "L1Y", "L1W", "L1V"];
 
 export const ajax = ["L1T", "L1Z", "L1S"];
 
-export const stouffville = ["L4A"]
+export const stouffville = ["L4A"];
