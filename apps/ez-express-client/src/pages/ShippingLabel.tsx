@@ -164,7 +164,6 @@ const ShippingLabelPage = ({
             >
               TO:
             </Text>
-            <Text style={{ marginLeft: 5 }}>{toPhone}</Text>
           </View>
           <View style={{ paddingHorizontal: 10 }}>
             <Text
@@ -261,16 +260,6 @@ const ShippingLabelPage = ({
             >
               {fromName}
             </Text>
-            <Text style={{ paddingBottom: 2, fontSize: 10 }}>
-              {fromAddress.split(",")[0]?.trim()}
-            </Text>
-            <Text style={{ paddingBottom: 2, fontSize: 10 }}>
-              {fromAddress.split(",")[1]?.trim()}
-            </Text>
-            <Text style={{ paddingBottom: 2, fontSize: 10 }}>
-              {fromAddress.split(",")[2]?.trim()}
-            </Text>
-            <Text style={{ paddingBottom: 2, fontSize: 10 }}>{fromPhone}</Text>
           </View>
         </View>
         <View
